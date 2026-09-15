@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Richfield  Umhlanga Campus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/Mystylein.css"/>
+  <script>
+(function() {
+  const prefs = JSON.parse(localStorage.getItem('rc_prefs') || '{}');
+  if (prefs.theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+})();
+</script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-icon">
+      <!-- graduation cap icon -->
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 3L2 8l10 5 10-5-10-5Z" fill="#fff"/>
+        <path d="M2 8v6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M6 10.5v4.5c0 1.657 2.686 3 6 3s6-1.343 6-3v-4.5" fill="#fff" opacity=".7"/>
+      </svg>
+    </div>
+    <div class="nav-text">
+      <span class="brand">Richfield</span>
+      <span class="campus">Umhlanga Campus</span>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="main">
+    <div class="page-heading">
+      <h1>Welcome back!</h1>
+      <p>Log in with your student number & password</p>
+    </div>
+
+    <div class="card">
+      <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
+
+        <!-- Student Number -->
+        <div class="field">
+          <label for="studentNum">Student Number</label>
+          <div class="input-wrap">
+            <input
+              type="text"
+              id="studentNum"
+              placeholder=""
+              autocomplete="username"
+              inputmode="numeric"
+            />
+          </div>
+          <span class="err-msg" id="numErr">Please enter your student number.</span>
+        </div>
+
+        <!-- Password -->
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <input
+              type="password"
+              id="password"
+              placeholder="Your password"
+              autocomplete="current-password"
+            />
+            <button type="button" class="toggle-pass" onclick="togglePass()" aria-label="Show/hide password">
+              <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <span class="err-msg" id="passErr">Please enter your password.</span>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-login" id="loginBtn">
+          <span id="btnText">Log In</span>
+          <div class="spinner" id="spinner"></div>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <p class="footer-link">Don't have an account? don't worry just <a href="signup.html">Sign up</a></p>
+  </main>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('loginForm'); // Ensure your <form> has this ID
+
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // 1. Capture user inputs perfectly
+        const studentNum = document.getElementById('studentNum').value.trim();
+        const password = document.getElementById('password').value;
+
+        // Visual loading hooks matching your UI state
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) loginBtn.disabled = true;
+
+        try {
+          // 2. Dispatch payload to your active port 5001 Express server
+          const response = await fetch('http://localhost:5001/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ studentNum, password }) // Keys must match backend exactly
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            // Your server's /login route returns { message, user: {...} } — there is
+            // no token issued anywhere in server.js, so we save the actual user
+            // record it sends back. Every other page (dashboard.html, Profile.html)
+            // reads this exact same 'currentUser' key.
+            localStorage.setItem('currentUser', JSON.stringify(data.user));
+
+            // Success! Route straight into the application dashboard
+            window.location.href = 'Dashboard.html';
+          } else {
+            // Display explicit error returned from server
+            alert(data.error || 'Invalid Student Number or Password.');
+          }
+        } catch (err) {
+          console.error('Network execution failure:', err);
+          alert('Server connection error. Ensure your Node terminal is active.');
+        } finally {
+          if (loginBtn) loginBtn.disabled = false;
+        }
+      });
+    }
+  });
+</script>
+  
+</body>
+</html>

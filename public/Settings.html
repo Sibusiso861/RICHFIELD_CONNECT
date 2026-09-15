@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings — Richfield Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f2f5;
+      --white: #ffffff;
+      --navy: #1a2332;
+      --blue: #3461d1;
+      --blue-light: #e8eefb;
+      --blue-hover: #2a52b8;
+      --green: #16a34a;
+      --green-light: #dcfce7;
+      --amber: #d97706;
+      --amber-light: #fef3c7;
+      --red: #dc2626;
+      --muted: #6b7280;
+      --border: #e2e5ea;
+      --text: #1a1f2e;
+      --radius: 12px;
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --white: #1e293b;
+      --text: #f1f5f9;
+      --border: #334155;
+      --muted: #94a3b8;
+      --blue-light: #1e3a5f;
+      --green-light: #14532d;
+      --amber-light: #451a03;
+      --navy: #0f172a;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ─── NAVBAR ─── */
+    .navbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-left { display: flex; align-items: center; gap: 12px; }
+    .nav-icon {
+      width: 38px; height: 38px;
+      background: var(--blue);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-icon svg { width: 20px; height: 20px; }
+    .nav-brand { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+    .nav-campus { font-size: 0.75rem; color: var(--muted); }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-avatar {
+      width: 36px; height: 36px;
+      background: var(--blue); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 0.8rem; font-weight: 700;
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.85rem; font-weight: 600; color: var(--muted);
+      text-decoration: none; padding: 6px 12px;
+      border-radius: 8px; transition: all 0.15s;
+    }
+    .nav-back:hover { background: var(--bg); color: var(--text); }
+    .nav-back svg { width: 16px; height: 16px; }
+
+    /* ─── LAYOUT ─── */
+    .layout { display: flex; flex: 1; }
+
+    /* ─── SETTINGS SIDEBAR ─── */
+    .settings-nav {
+      width: 220px;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      padding: 24px 14px;
+      flex-shrink: 0;
+    }
+    .settings-nav-title {
+      font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted); padding: 0 10px 12px;
+    }
+    .settings-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px;
+      font-size: 0.875rem; font-weight: 500;
+      color: var(--muted); cursor: pointer;
+      transition: all 0.15s; margin-bottom: 2px;
+    }
+    .settings-nav-item svg { width: 17px; height: 17px; flex-shrink: 0; }
+    .settings-nav-item:hover { background: var(--bg); color: var(--text); }
+    .settings-nav-item.active { background: var(--blue-light); color: var(--blue); font-weight: 600; }
+    .settings-nav-item.danger { color: var(--red); }
+    .settings-nav-item.danger:hover { background: #fee2e2; }
+
+    /* ─── MAIN CONTENT ─── */
+    .content { flex: 1; padding: 32px; max-width: 720px; }
+
+    .settings-section { display: none; }
+    .settings-section.active { display: block; }
+
+    .section-header { margin-bottom: 28px; }
+    .section-header h1 { font-size: 1.3rem; font-weight: 800; }
+    .section-header p { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+
+    /* ─── CARDS ─── */
+    .settings-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-title {
+      font-size: 0.875rem; font-weight: 700;
+      margin-bottom: 16px; color: var(--text);
+    }
+
+    /* ─── FORM FIELDS ─── */
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block; font-size: 0.75rem;
+      font-weight: 600; color: var(--muted); margin-bottom: 5px;
+    }
+    .field input, .field select {
+      width: 100%; padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px; font-family: inherit;
+      font-size: 0.875rem; color: var(--text);
+      background: var(--bg); transition: border 0.15s;
+      outline: none;
+    }
+    .field input:focus, .field select:focus { border-color: var(--blue); background: var(--white); }
+    .field input:disabled {
+      opacity: 0.6; cursor: not-allowed;
+    }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ─── BUTTONS ─── */
+    .btn {
+      padding: 9px 20px; border-radius: 8px;
+      font-size: 0.85rem; font-weight: 600;
+      border: none; cursor: pointer;
+      font-family: inherit; transition: all 0.15s;
+    }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover { background: var(--blue-hover); }
+    .btn-ghost {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--bg); }
+    .btn-danger { background: var(--red); color: #fff; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-row { display: flex; gap: 10px; margin-top: 18px; }
+
+    /* ─── TOGGLE ROWS ─── */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+    .toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .toggle-info { flex: 1; }
+    .toggle-label { font-size: 0.875rem; font-weight: 600; }
+    .toggle-desc { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .toggle-switch {
+      width: 42px; height: 24px;
+      background: var(--border); border-radius: 20px;
+      position: relative; cursor: pointer;
+      transition: background 0.2s; flex-shrink: 0; margin-left: 16px;
+    }
+    .toggle-switch.on { background: var(--blue); }
+    .toggle-switch.green.on { background: var(--green); }
+    .toggle-knob {
+      position: absolute; top: 3px; left: 3px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #fff; transition: left 0.2s;
+    }
+    .toggle-switch.on .toggle-knob { left: 21px; }
+
+    /* ─── LANGUAGE CARDS ─── */
+    .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .lang-card {
+      border: 2px solid var(--border);
+      border-radius: 10px; padding: 14px 16px;
+      cursor: pointer; transition: all 0.15s;
+      background: var(--white);
+    }
+    .lang-card:hover { border-color: var(--blue); }
+    .lang-card.selected { border-color: var(--blue); background: var(--blue-light); }
+    .lang-name { font-size: 0.9rem; font-weight: 700; }
+    .lang-native { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .lang-check {
+      float: right; width: 20px; height: 20px;
+      border-radius: 50%; background: var(--blue);
+      display: none; align-items: center; justify-content: center;
+    }
+    .lang-card.selected .lang-check { display: flex; }
+    .lang-check svg { width: 11px; height: 11px; }
+
+    /* ─── THEME CARDS ─── */
+    .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .theme-card {
+      border: 2px solid var(--border);
+      border-radius: 10px; padding: 16px;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .theme-card:hover { border-color: var(--blue); }
+    .theme-card.selected { border-color: var(--blue); }
+    .theme-preview {
+      height: 60px; border-radius: 8px; margin-bottom: 10px;
+      display: flex; gap: 6px; padding: 8px; overflow: hidden;
+    }
+    .theme-preview-light { background: #f0f2f5; }
+    .theme-preview-dark { background: #0f172a; }
+    .theme-bar { border-radius: 4px; height: 100%; }
+    .theme-label { font-size: 0.85rem; font-weight: 700; }
+
+    /* ─── SUCCESS / ERROR ─── */
+    .alert {
+      padding: 10px 14px; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 600;
+      margin-bottom: 14px; display: none;
+    }
+    .alert.success { background: var(--green-light); color: var(--green); display: block; }
+    .alert.error { background: #fee2e2; color: var(--red); display: block; }
+
+    /* ─── DANGER ZONE ─── */
+    .danger-zone {
+      border: 1px solid #fca5a5;
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      background: #fff5f5;
+    }
+    [data-theme="dark"] .danger-zone { background: #2d0a0a; border-color: #7f1d1d; }
+    .danger-zone-title { font-size: 0.875rem; font-weight: 700; color: var(--red); margin-bottom: 6px; }
+    .danger-zone-desc { font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; }
+
+    /* ─── PROFILE AVATAR ─── */
+    .avatar-row {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+    }
+    .avatar-circle {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--blue); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; font-weight: 800; flex-shrink: 0;
+    }
+    .avatar-info .name { font-size: 1rem; font-weight: 700; }
+    .avatar-info .num { font-size: 0.78rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-left">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 3L2 8l10 5 10-5-10-5Z" fill="#fff"/>
+        <path d="M6 10.5v4.5c0 1.657 2.686 3 6 3s6-1.343 6-3v-4.5" fill="#fff" opacity=".7"/>
+      </svg>
+    </div>
+    <div>
+      <div class="nav-brand">Richfield Connect</div>
+      <div class="nav-campus">Umhlanga Campus</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a href="Dashboard.html" class="nav-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Dashboard
+    </a>
+    <div class="nav-avatar" id="navAvatar">--</div>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <aside class="settings-nav">
+    <div class="settings-nav-title">Settings</div>
+
+    <div class="settings-nav-item active" onclick="showSection('profile')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </div>
+    <div class="settings-nav-item" onclick="showSection('security')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Security
+    </div>
+    <div class="settings-nav-item" onclick="showSection('notifications')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Notifications
+    </div>
+    <div class="settings-nav-item" onclick="showSection('privacy')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Privacy
+    </div>
+    <div class="settings-nav-item" onclick="showSection('appearance')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      Appearance
+    </div>
+    <div class="settings-nav-item" onclick="showSection('language')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Language
+    </div>
+    <div class="settings-nav-item danger" onclick="showSection('account')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Account
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <!-- PROFILE -->
+    <div class="settings-section active" id="section-profile">
+      <div class="section-header">
+        <h1>Profile</h1>
+        <p>Update your personal information visible to other students.</p>
+      </div>
+      <div class="settings-card">
+        <div class="avatar-row">
+          <div class="avatar-circle" id="profileAvatar">--</div>
+          <div class="avatar-info">
+            <div class="name" id="profileFullName">Loading...</div>
+            <div class="num" id="profileStudentNum">STU · --------</div>
+          </div>
+        </div>
+        <div id="profileAlert"></div>
+        <div class="field-row">
+          <div class="field">
+            <label>First Name</label>
+            <input type="text" id="editFirstName" placeholder="First name"/>
+          </div>
+          <div class="field">
+            <label>Last Name</label>
+            <input type="text" id="editLastName" placeholder="Last name"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>Student Number</label>
+          <input type="text" id="editStudentNum" disabled/>
+        </div>
+        <div class="field">
+          <label>Course / Programme</label>
+          <input type="text" id="editCourse" placeholder="e.g. Diploma in Information Technology"/>
+        </div>
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" id="editEmail" disabled/>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+          <button class="btn btn-ghost" onclick="loadProfileData()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="settings-section" id="section-security">
+      <div class="section-header">
+        <h1>Security</h1>
+        <p>Change your password to keep your account secure.</p>
+      </div>
+      <div class="settings-card">
+        <div class="card-title">Change Password</div>
+        <div id="passwordAlert"></div>
+        <div class="field">
+          <label>Current Password</label>
+          <input type="password" id="currentPassword" placeholder="Enter current password"/>
+        </div>
+        <div class="field">
+          <label>New Password</label>
+          <input type="password" id="newPassword" placeholder="At least 6 characters"/>
+        </div>
+        <div class="field">
+          <label>Confirm New Password</label>
+          <input type="password" id="confirmPassword" placeholder="Repeat new password"/>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="settings-section" id="section-notifications">
+      <div class="section-header">
+        <h1>Notifications</h1>
+        <p>Choose what you want to be notified about.</p>
+      </div>
+      <div class="settings-card">
+        <div class="card-title">Notification Preferences</div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Buddy Requests</div>
+            <div class="toggle-desc">Notify me when someone sends a buddy request</div>
+          </div>
+          <div class="toggle-switch on green" id="notif-buddy" onclick="toggleNotif('buddy')"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">New Messages</div>
+            <div class="toggle-desc">Notify me when I receive a new message</div>
+          </div>
+          <div class="toggle-switch on green" id="notif-messages" onclick="toggleNotif('messages')"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Study Session Reminders</div>
+            <div class="toggle-desc">Remind me before a scheduled study session</div>
+          </div>
+          <div class="toggle-switch on green" id="notif-sessions" onclick="toggleNotif('sessions')"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Task Due Date Alerts</div>
+            <div class="toggle-desc">Alert me when a task deadline is approaching</div>
+          </div>
+          <div class="toggle-switch on green" id="notif-tasks" onclick="toggleNotif('tasks')"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Group Session Invites</div>
+            <div class="toggle-desc">Notify me when a new group session is available</div>
+          </div>
+          <div class="toggle-switch green" id="notif-groups" onclick="toggleNotif('groups')"><div class="toggle-knob"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRIVACY -->
+    <div class="settings-section" id="section-privacy">
+      <div class="section-header">
+        <h1>Privacy</h1>
+        <p>Control who can see your profile and activity.</p>
+      </div>
+      <div class="settings-card">
+        <div class="card-title">Visibility Settings</div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Show Profile to Other Students</div>
+            <div class="toggle-desc">When off, others can't find you in buddy suggestions</div>
+          </div>
+          <div class="toggle-switch on green" id="priv-visible" onclick="togglePrivacy('visible')"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Show My Study Sessions</div>
+            <div class="toggle-desc">Allow others to see your group sessions</div>
+          </div>
+          <div class="toggle-switch on green" id="priv-sessions" onclick="togglePrivacy('sessions')"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Show Online Status</div>
+            <div class="toggle-desc">Let others see when you are active on the platform</div>
+          </div>
+          <div class="toggle-switch green" id="priv-online" onclick="togglePrivacy('online')"><div class="toggle-knob"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPEARANCE -->
+    <div class="settings-section" id="section-appearance">
+      <div class="section-header">
+        <h1>Appearance</h1>
+        <p>Customise how Richfield Connect looks for you.</p>
+      </div>
+      <div class="settings-card">
+        <div class="card-title">Theme</div>
+        <div class="theme-grid">
+          <div class="theme-card selected" id="theme-light" onclick="setTheme('light')">
+            <div class="theme-preview theme-preview-light">
+              <div class="theme-bar" style="width:30%;background:#1a2332;"></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                <div class="theme-bar" style="height:35%;background:#3461d1;border-radius:4px;"></div>
+                <div class="theme-bar" style="height:25%;background:#e2e5ea;border-radius:4px;"></div>
+                <div class="theme-bar" style="height:25%;background:#e2e5ea;border-radius:4px;"></div>
+              </div>
+            </div>
+            <div class="theme-label"> Light Mode</div>
+          </div>
+          <div class="theme-card" id="theme-dark" onclick="setTheme('dark')">
+            <div class="theme-preview theme-preview-dark">
+              <div class="theme-bar" style="width:30%;background:#0f172a;"></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+                <div class="theme-bar" style="height:35%;background:#3461d1;border-radius:4px;"></div>
+                <div class="theme-bar" style="height:25%;background:#334155;border-radius:4px;"></div>
+                <div class="theme-bar" style="height:25%;background:#334155;border-radius:4px;"></div>
+              </div>
+            </div>
+            <div class="theme-label"> Dark Mode</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LANGUAGE -->
+    <div class="settings-section" id="section-language">
+      <div class="section-header">
+        <h1>Language</h1>
+        <p>Choose your preferred language for the platform.</p>
+      </div>
+      <div class="settings-card">
+        <div class="card-title">Select Language</div>
+        <div class="lang-grid">
+          <div class="lang-card selected" id="lang-en" onclick="setLanguage('en')">
+            <div class="lang-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="lang-name">🇬🇧 English</div>
+            <div class="lang-native">English</div>
+          </div>
+          <div class="lang-card" id="lang-zu" onclick="setLanguage('zu')">
+            <div class="lang-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="lang-name">🇿🇦 Zulu</div>
+            <div class="lang-native">IsiZulu</div>
+          </div>
+          <div class="lang-card" id="lang-xh" onclick="setLanguage('xh')">
+            <div class="lang-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="lang-name">🇿🇦 Xhosa</div>
+            <div class="lang-native">IsiXhosa</div>
+          </div>
+          <div class="lang-card" id="lang-af" onclick="setLanguage('af')">
+            <div class="lang-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="lang-name">🇿🇦 Afrikaans</div>
+            <div class="lang-native">Afrikaans</div>
+          </div>
+        </div>
+        <p style="font-size:0.75rem;color:var(--muted);margin-top:14px;">Your preference is saved and will be applied across the platform.</p>
+      </div>
+    </div>
+
+    <!-- ACCOUNT -->
+    <div class="settings-section" id="section-account">
+      <div class="section-header">
+        <h1>Account</h1>
+        <p>Manage your account access and data.</p>
+      </div>
+
+      <div class="settings-card" style="margin-bottom:16px;">
+        <div class="card-title">Sign Out</div>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:16px;">Sign out of Richfield Connect on this device.</p>
+        <button class="btn btn-ghost" onclick="handleLogout()">Sign Out</button>
+      </div>
+
+      <div class="danger-zone">
+        <div class="danger-zone-title"> Delete Account</div>
+        <div class="danger-zone-desc">Permanently delete your account and all associated data including tasks, messages, sessions, and buddy connections. This action cannot be undone.</div>
+        <div id="deleteAlert"></div>
+        <button class="btn btn-danger" onclick="confirmDelete()">Delete My Account</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const API_BASE = 'http://localhost:5001';
+  let currentUser = null;
+
+  // ── INIT ──
+  document.addEventListener('DOMContentLoaded', () => {
+    const raw = localStorage.getItem('currentUser');
+    if (!raw) { window.location.href = 'Signin.html'; return; }
+    currentUser = JSON.parse(raw);
+
+    // Nav avatar
+    const avatar = document.getElementById('navAvatar');
+    if (avatar) avatar.textContent = currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0);
+
+    loadProfileData();
+    loadPreferences();
+  });
+
+  // ── SECTION NAV ──
+  function showSection(id) {
+    document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.settings-nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('section-' + id).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  // ── PROFILE ──
+  function loadProfileData() {
+    if (!currentUser) return;
+    document.getElementById('editFirstName').value = currentUser.firstName || '';
+    document.getElementById('editLastName').value = currentUser.lastName || '';
+    document.getElementById('editStudentNum').value = currentUser.studentNum || '';
+    document.getElementById('editCourse').value = currentUser.course || '';
+    document.getElementById('editEmail').value = currentUser.email || '';
+
+    const initials = currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0);
+    document.getElementById('profileAvatar').textContent = initials;
+    document.getElementById('profileFullName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+    document.getElementById('profileStudentNum').textContent = `STU · ${currentUser.studentNum}`;
+  }
+
+  async function saveProfile() {
+    const firstName = document.getElementById('editFirstName').value.trim();
+    const lastName = document.getElementById('editLastName').value.trim();
+    const course = document.getElementById('editCourse').value.trim();
+    const alertEl = document.getElementById('profileAlert');
+
+    if (!firstName || !lastName) {
+      showAlert(alertEl, 'First name and last name are required.', 'error');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/users/${currentUser.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, course })
+      });
+      const data = await res.json();
+      if (!res.ok) { showAlert(alertEl, data.error, 'error'); return; }
+
+      // Update localStorage
+      currentUser.firstName = firstName;
+      currentUser.lastName = lastName;
+      currentUser.course = course;
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+      loadProfileData();
+      showAlert(alertEl, 'Profile updated successfully!', 'success');
+    } catch (e) {
+      showAlert(alertEl, 'Could not reach server. Is Server.js running?', 'error');
+    }
+  }
+
+  // ── PASSWORD ──
+  async function changePassword() {
+    const current = document.getElementById('currentPassword').value;
+    const newPwd = document.getElementById('newPassword').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const alertEl = document.getElementById('passwordAlert');
+
+    if (!current || !newPwd || !confirm) {
+      showAlert(alertEl, 'Please fill in all password fields.', 'error'); return;
+    }
+    if (newPwd.length < 6) {
+      showAlert(alertEl, 'New password must be at least 6 characters.', 'error'); return;
+    }
+    if (newPwd !== confirm) {
+      showAlert(alertEl, 'New passwords do not match.', 'error'); return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/users/${currentUser.id}/password`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword: current, newPassword: newPwd })
+      });
+      const data = await res.json();
+      if (!res.ok) { showAlert(alertEl, data.error, 'error'); return; }
+
+      document.getElementById('currentPassword').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+      showAlert(alertEl, 'Password changed successfully!', 'success');
+    } catch (e) {
+      showAlert(alertEl, 'Could not reach server. Is Server.js running?', 'error');
+    }
+  }
+
+  // ── PREFERENCES (localStorage) ──
+  function loadPreferences() {
+    const prefs = JSON.parse(localStorage.getItem('rc_prefs') || '{}');
+
+    // Notifications
+    ['buddy','messages','sessions','tasks','groups'].forEach(key => {
+      const val = prefs['notif_' + key] !== false;
+      const el = document.getElementById('notif-' + key);
+      if (el) { if (val) el.classList.add('on'); else el.classList.remove('on'); }
+    });
+
+    // Privacy
+    ['visible','sessions','online'].forEach(key => {
+      const val = prefs['priv_' + key] !== false;
+      const el = document.getElementById('priv-' + key);
+      if (el) { if (val) el.classList.add('on'); else el.classList.remove('on'); }
+    });
+
+    // Theme
+    const theme = prefs.theme || 'light';
+    applyTheme(theme, false);
+
+    // Language
+    const lang = prefs.language || 'en';
+    applyLanguage(lang, false);
+  }
+
+  function savePrefs(key, value) {
+    const prefs = JSON.parse(localStorage.getItem('rc_prefs') || '{}');
+    prefs[key] = value;
+    localStorage.setItem('rc_prefs', JSON.stringify(prefs));
+  }
+
+  function toggleNotif(key) {
+    const el = document.getElementById('notif-' + key);
+    const isOn = el.classList.toggle('on');
+    savePrefs('notif_' + key, isOn);
+  }
+
+  function togglePrivacy(key) {
+    const el = document.getElementById('priv-' + key);
+    const isOn = el.classList.toggle('on');
+    savePrefs('priv_' + key, isOn);
+  }
+
+  // ── THEME ──
+  function setTheme(theme) {
+    applyTheme(theme, true);
+    savePrefs('theme', theme);
+  }
+
+  function applyTheme(theme, save) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-light').classList.toggle('selected', theme === 'light');
+    document.getElementById('theme-dark').classList.toggle('selected', theme === 'dark');
+  }
+
+  // ── LANGUAGE ──
+  function setLanguage(lang) {
+    applyLanguage(lang, true);
+    savePrefs('language', lang);
+  }
+
+  function applyLanguage(lang, save) {
+    document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
+    const el = document.getElementById('lang-' + lang);
+    if (el) el.classList.add('selected');
+  }
+
+  // ── ACCOUNT ──
+  function handleLogout() {
+    localStorage.clear();
+    window.location.href = 'Signin.html';
+  }
+
+  async function confirmDelete() {
+    const alertEl = document.getElementById('deleteAlert');
+    const confirmed = confirm('Are you absolutely sure? This will permanently delete your account and ALL your data. This cannot be undone.');
+    if (!confirmed) return;
+
+    const doubleConfirm = confirm('Last chance — delete my Richfield Connect account permanently?');
+    if (!doubleConfirm) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/users/${currentUser.id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json();
+        showAlert(alertEl, data.error || 'Could not delete account.', 'error');
+        return;
+      }
+      localStorage.clear();
+      alert('Your account has been deleted. Goodbye!');
+      window.location.href = 'Signup.html';
+    } catch (e) {
+      showAlert(alertEl, 'Could not reach server. Is Server.js running?', 'error');
+    }
+  }
+
+  // ── HELPER ──
+  function showAlert(el, message, type) {
+    el.textContent = message;
+    el.className = 'alert ' + type;
+    setTimeout(() => { el.className = 'alert'; }, 4000);
+  }
+</script>
+</body>
+</html>

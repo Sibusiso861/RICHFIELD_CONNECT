@@ -1,0 +1,66 @@
+---
+references:
+  - "File: /Server.js"
+generationTime: 2026-06-18T20:32:59.089Z
+---
+erDiagram
+    CUSTOMER {
+        int id PK
+        string name
+        string email
+        date created_at
+    }
+    ORDER {
+        int id PK
+        int customer_id FK
+        float total
+        date order_date
+    }
+    CUSTOMER ||--o{ ORDER : places
+
+    USERS {
+        int id PK
+        string firstName
+        string lastName
+        string studentNum UK
+        string email
+        string course
+        string password
+    }
+    TASKS {
+        int id PK
+        int user_id FK
+        string title
+        date due_date
+        string priority
+        string status
+        string course
+        date created_at
+    }
+    STUDY_PLANS {
+        int id PK
+        int user_id FK
+        string goal
+        string steps
+        date created_at
+    }
+    RESOURCES {
+        int id PK
+        int user_id FK
+        string course
+        string filename
+        string filepath
+        date uploaded_at
+    }
+    FORUM_POSTS {
+        int id PK
+        int user_id FK
+        string group_name
+        string body
+        date created_at
+    }
+
+    USERS ||--o{ TASKS : has
+    USERS ||--o{ STUDY_PLANS : creates
+    USERS ||--o{ RESOURCES : uploads
+    USERS ||--o{ FORUM_POSTS : posts

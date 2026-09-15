@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Richfield — Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/Mystyleup.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 3L2 8l10 5 10-5-10-5Z" fill="#fff"/>
+        <path d="M2 8v6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M6 10.5v4.5c0 1.657 2.686 3 6 3s6-1.343 6-3v-4.5" fill="#fff" opacity=".7"/>
+      </svg>
+    </div>
+    <div class="nav-text">
+      <span class="brand">Richfield</span>
+      <span class="campus">Umhlanga Campus</span>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="page-heading">
+      <h1>Create an Account</h1>
+      <p>Join the student portal dashboard</p>
+    </div>
+
+    <div class="card">
+      <form id="signupForm" onsubmit="handleSignup(event)" novalidate>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="firstName">First Name</label>
+            <div class="input-wrap">
+              <input type="text" id="firstName" placeholder="First Name"/>
+            </div>
+            <span class="err-msg" id="firstNameErr">Please enter your first name.</span>
+          </div>
+
+          <div class="field">
+            <label for="lastName">Last Name</label>
+            <div class="input-wrap">
+              <input type="text" id="lastName" placeholder="Last Name"/>
+            </div>
+            <span class="err-msg" id="lastNameErr">Please enter your last name.</span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="studentNum">Student Number</label>
+            <div class="input-wrap">
+              <input type="text" id="studentNum" placeholder="Student Number" inputmode="numeric"/>
+            </div>
+            <span class="err-msg" id="studentNumErr">Please enter your student number.</span>
+          </div>
+
+          <div class="field">
+            <label for="email">Email Address</label>
+            <div class="input-wrap">
+              <input type="email" id="email" placeholder="Email"/>
+            </div>
+            <span class="err-msg" id="emailErr">Please enter a valid email address.</span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="course">Course</label>
+            <div class="input-wrap select-wrap">
+              <select id="course">
+                <option value="" disabled selected>Select your course</option>
+                <option value="cs">Bachelor of Computer Science</option>
+                <option value="it">BSc in Information Technology</option>
+                <option value="ba">Bachelor of Business Administration</option>
+              </select>
+            </div>
+            <span class="err-msg" id="courseErr">Please select a course.</span>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+              <input type="password" id="password" placeholder="Password"/>
+            </div>
+            <span class="err-msg" id="passwordErr">Please enter a password.</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="confirmPass">Confirm Password</label>
+          <div class="input-wrap">
+            <input type="password" id="confirmPass" placeholder="Confirm Password"/>
+          </div>
+          <span class="err-msg" id="confirmPassErr">Passwords do not match.</span>
+        </div>
+
+        <div class="terms">
+          <input type="checkbox" id="agree"/>
+          <label for="agree">I agree to the <a href="#">Terms and Conditions</a></label>
+        </div>
+
+        <button type="submit" class="btn-signup" id="signupBtn">
+          <span id="btnText">Sign Up</span>
+          <div class="spinner" id="spinner"></div>
+        </button>
+
+      </form>
+    </div>
+
+    <p class="footer-link">Already have an account? <a href="Signin.html">Log in</a></p>
+  </main>
+ 
+<script>
+  async function handleSignup(e) {
+    e.preventDefault();
+    console.log("1. Form submitted, default prevented.");
+
+    // Gather form values
+    const formData = {
+      firstName: document.getElementById('firstName').value.trim(),
+      lastName: document.getElementById('lastName').value.trim(),
+      studentNum: document.getElementById('studentNum').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      course: document.getElementById('course').value,
+      password: document.getElementById('password').value
+    };
+    console.log("2. Form data gathered:", formData);
+
+    const btn = document.getElementById('signupBtn');
+    const btnText = document.getElementById('btnText');
+    const spinner = document.getElementById('spinner');
+
+    if (btn) btn.disabled = true;
+    if (btnText) btnText.style.display = 'none';
+    if (spinner) spinner.style.display = 'block';
+
+    try {
+      console.log("3. Sending fetch request to backend...");
+      const response = await fetch('http://localhost:5001/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      console.log("4. Response received. Status:", response.status);
+      const data = await response.json();
+      console.log("5. Data parsed from backend:", data);
+
+      if (response.ok) {
+        console.log("6. Success! Saving user to localStorage...");
+        const userSessionData = data.user || formData;
+        localStorage.setItem('currentUser', JSON.stringify(userSessionData));
+
+        console.log("7. Forcing immediate redirect to Dashboard.html...");
+        window.location.assign('Dashboard.html'); 
+        return; // Stop running any more code
+        
+      } else {
+        // Backend rejected the signup (e.g. duplicate user)
+        console.warn("Backend rejected signup:", data.error);
+        alert("Signup failed: " + (data.error || "User may already exist."));
+      }
+
+    } catch (err) {
+      console.error('Fetch failed or network error:', err);
+      alert('Server connection error. Check your terminal to ensure Server.js is running.');
+    }
+
+    // Reset button only if the signup failed
+    if (spinner) spinner.style.display = 'none';
+    if (btnText) {
+      btnText.textContent = 'Sign Up';
+      btnText.style.display = 'inline';
+    }
+    if (btn) btn.disabled = false;
+  }
+</script>
+</body>
+</html>

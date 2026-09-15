@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Richfield — Find a Buddy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/Dashboard.css"/>
+  <script>
+(function() {
+  const prefs = JSON.parse(localStorage.getItem('rc_prefs') || '{}');
+  if (prefs.theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+})();
+</script>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-left">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 3L2 8l10 5 10-5-10-5Z" fill="#fff"/>
+        <path d="M6 10.5v4.5c0 1.657 2.686 3 6 3s6-1.343 6-3v-4.5" fill="#fff" opacity=".7"/>
+      </svg>
+    </div>
+    <div>
+      <div class="nav-brand">Richfield Connect</div>
+      <div class="nav-campus">Umhlanga Campus</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-notif">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <div class="notif-dot"></div>
+    </div>
+    <div class="nav-avatar" id="topNavAvatar">--</div>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-label">Menu</div>
+    <a class="nav-item active" id="navDashboard" onclick="showView('home'); return false;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" id="navTasks" onclick="showView('tasks'); return false;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 15l2 2 4-4"/></svg>
+      Tasks
+      <span class="badge" id="taskBadge" style="display:none;">0</span>
+    </a>
+    <a class="nav-item" id="navBuddies" onclick="showView('buddy'); return false;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Find Buddies
+      <span class="badge">3</span>
+    </a>
+    <a class="nav-item" id="navMessages" onclick="showView('messages'); return false;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Messages
+      <span class="badge" id="msgBadge" style="display:none;">0</span>
+    </a>
+    <a class="nav-item" id="navSessions" onclick="showView('sessions'); return false;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Study Sessions
+    </a>
+    <a class="nav-item" onclick="return false;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Campus Map
+    </a>
+
+    <div class="sidebar-label" style="margin-top:8px;">Account</div>
+    <a href="Profile.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My Profile
+    </a>
+    <a href="Settings.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M19.07 19.07l-1.41-1.41M5.34 5.34L3.93 3.93M21 12h-2M5 12H3M12 3V1M12 23v-2"/></svg>
+      Settings
+    </a>
+
+    <div class="sidebar-bottom">
+      <a href="#" class="nav-item" onclick="handleLogout(); return false;" style="color:#dc2626;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <div id="buddyView">
+
+    <div class="page-header">
+      <div>
+        <h1>Find a Buddy </h1>
+        <p id="welcomeGreeting">Welcome back! Choose your mode and connect with students on campus.</p>
+      </div>
+      <button class="shy-toggle" id="shyBtn" onclick="toggleShy()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        Shy Mode
+      </button>
+    </div>
+
+    <div class="shy-banner" id="shyBanner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      <div>
+        <strong>Shy Mode is ON</strong> &nbsp;
+        <span>Your profile is hidden from others. You can see buddy suggestions but they can't find you until you initiate a chat.</span>
+      </div>
+    </div>
+
+    <div class="mode-selector">
+      <div class="mode-card study active" onclick="selectMode('study')" id="studyCard">
+        <div class="selected-badge study">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="mode-icon study">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3461d1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div class="mode-title">Study Buddy</div>
+        <div class="mode-desc">Connect with students sharing the same courses, exam periods, and study schedules across campus.</div>
+        <span class="mode-tag study">Academic · Courses · Exams</span>
+      </div>
+
+      <div class="mode-card social" onclick="selectMode('social')" id="socialCard">
+        <div class="selected-badge social">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="mode-icon social">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="mode-title">Social Buddy</div>
+        <div class="mode-desc">Meet new friends based on hobbies, clubs, interests, and what's happening on campus right now.</div>
+        <span class="mode-tag social">Hobbies · Events · Clubs</span>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Available Matches</div>
+        <div class="stat-value" id="statMatches">—</div>
+        <div class="stat-sub"><span class="stat-dot" style="background:#16a34a;"></span>Students to connect with</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">My Buddies</div>
+        <div class="stat-value" id="statBuddies">—</div>
+        <div class="stat-sub"><span class="stat-dot" style="background:#3461d1;"></span>Active connections</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pending Requests</div>
+        <div class="stat-value" id="statPending">—</div>
+        <div class="stat-sub"><span class="stat-dot" style="background:#d97706;"></span>Awaiting response</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Study Hours</div>
+        <div class="stat-value" id="statHours">—</div>
+        <div class="stat-sub"><span class="stat-dot" style="background:#6b7280;"></span>From completed sessions</div>
+      </div>
+    </div>
+
+    <div class="panel active fade-in" id="studyPanel">
+      <div class="two-col">
+        <div>
+          <div class="filter-bar">
+            <button class="filter-btn active" onclick="setBuddyFilter(this,'all')">All Students</button>
+            <button class="filter-btn" onclick="setBuddyFilter(this,'same')">Same Course</button>
+            <button class="filter-btn" onclick="setBuddyFilter(this,'pending')">Pending</button>
+            <button class="filter-btn" onclick="setBuddyFilter(this,'accepted')">Connected</button>
+          </div>
+
+          <div class="section-title">Study Buddy Suggestions <a onclick="loadBuddies()">Refresh →</a></div>
+          <div class="buddy-list" id="buddyList">
+            <div class="stat-sub" style="padding:10px 0;">Loading students...</div>
+          </div>
+            
+        </div>
+
+        <div>
+          <div class="widget">
+            <div class="your-profile">
+              <div class="profile-avatar" id="widgetAvatar">--</div>
+              <div>
+                <div class="profile-name" id="widgetName">Loading...</div>
+                <div class="profile-num" id="widgetNum">STU · --------</div>
+              </div>
+            </div>
+            <div class="profile-stat-row">
+              <div class="profile-stat"><div class="profile-stat-val">4</div><div class="profile-stat-lbl">Buddies</div></div>
+              <div class="profile-stat"><div class="profile-stat-val">18h</div><div class="profile-stat-lbl">Studied</div></div>
+              <div class="profile-stat"><div class="profile-stat-val">94%</div><div class="profile-stat-lbl">Active</div></div>
+            </div>
+            <div class="availability-row">
+              <div class="avail-label">Available to meet</div>
+              <div class="toggle-switch" id="availToggle" onclick="toggleAvail()"><div class="toggle-knob"></div></div>
+            </div>
+          </div>
+
+          <div class="widget">
+            <div class="section-title">Buddy Requests <a>View all</a></div>
+            <div class="request-item">
+              <div class="req-avatar" style="background:#3461d1;">PM</div>
+              <div class="req-info">
+                <div class="req-name">Phumzile Mthembu</div>
+                <div class="req-meta">Same course · Data Structures</div>
+              </div>
+              <div class="req-btns">
+                <button class="req-btn accept">✓</button>
+                <button class="req-btn decline">✕</button>
+              </div>
+            </div>
+            <div class="request-item">
+              <div class="req-avatar" style="background:#7c3aed;">KN</div>
+              <div class="req-info">
+                <div class="req-name">Khanya Ndlovu</div>
+                <div class="req-meta">Near you · Library</div>
+              </div>
+              <div class="req-btns">
+                <button class="req-btn accept">✓</button>
+                <button class="req-btn decline">✕</button>
+              </div>
+            </div>
+            <div class="request-item">
+              <div class="req-avatar" style="background:#0891b2;">RM</div>
+              <div class="req-info">
+                <div class="req-name">Rethabile Molefe</div>
+                <div class="req-meta">Exam partner · Monday</div>
+              </div>
+              <div class="req-btns">
+                <button class="req-btn accept">✓</button>
+                <button class="req-btn decline">✕</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="widget">
+            <div class="section-title">Today's Schedule</div>
+            <div class="schedule-row">
+              <span class="schedule-time">08:00</span>
+              <span class="schedule-dot" style="background:#3461d1;"></span>
+              <span class="schedule-text">Data Structures Lecture</span>
+            </div>
+            <div class="schedule-row">
+              <span class="schedule-time">10:30</span>
+              <span class="schedule-dot" style="background:#16a34a;"></span>
+              <span class="schedule-text">Study Session – Library</span>
+            </div>
+            <div class="schedule-row">
+              <span class="schedule-time">13:00</span>
+              <span class="schedule-dot" style="background:#d97706;"></span>
+              <span class="schedule-text">Meet Thabo · Venue 3</span>
+            </div>
+            <div class="schedule-row">
+              <span class="schedule-time">15:00</span>
+              <span class="schedule-dot" style="background:#6b7280;"></span>
+              <span class="schedule-text">Algorithms Tutorial</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="widget" style="margin-top: 20px;">
+        <div class="section-title">Campus Heatmap — Where students are forming study groups</div>
+        <div class="heatmap-grid">
+          <div class="heatmap-label">Mon</div><div class="heatmap-label">Tue</div><div class="heatmap-label">Wed</div><div class="heatmap-label">Thu</div><div class="heatmap-label">Fri</div><div class="heatmap-label">Sat</div><div class="heatmap-label">Sun</div>
+          <div class="heatmap-cell heat-2">Lib</div><div class="heatmap-cell heat-4">Lab</div><div class="heatmap-cell heat-1">V3</div><div class="heatmap-cell heat-3">Lib</div><div class="heatmap-cell heat-2">Caf</div><div class="heatmap-cell heat-0">—</div><div class="heatmap-cell heat-0">—</div>
+          <div class="heatmap-cell heat-3">Caf</div><div class="heatmap-cell heat-2">V1</div><div class="heatmap-cell heat-4">Lib</div><div class="heatmap-cell heat-1">V2</div><div class="heatmap-cell heat-3">Lab</div><div class="heatmap-cell heat-1">Lib</div><div class="heatmap-cell heat-0">—</div>
+          <div class="heatmap-cell heat-1">V2</div><div class="heatmap-cell heat-3">Caf</div><div class="heatmap-cell heat-2">Lab</div><div class="heatmap-cell heat-4">V3</div><div class="heatmap-cell heat-1">V1</div><div class="heatmap-cell heat-0">—</div><div class="heatmap-cell heat-0">—</div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:0.72rem;color:var(--muted);">
+          <span>Lib = Library</span><span>Lab = Computer Lab</span><span>Caf = Cafeteria</span><span>V1/V2/V3 = Venues</span>
+          <span style="margin-left:auto;">Darker = more students</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel fade-in" id="socialPanel">
+      <div class="two-col">
+        <div>
+          <div class="filter-bar">
+            <button class="filter-btn active green" onclick="setFilter(this)">All</button>
+            <button class="filter-btn" onclick="setFilter(this)">Sports</button>
+            <button class="filter-btn" onclick="setFilter(this)">Gaming</button>
+            <button class="filter-btn" onclick="setFilter(this)">Music</button>
+            <button class="filter-btn" onclick="setFilter(this)">Events</button>
+          </div>
+
+          <div class="section-title">Social Matches <a>See all →</a></div>
+          <div class="buddy-list">
+            <div class="buddy-card">
+              <div class="buddy-avatar" style="background:#16a34a;">MB</div>
+              <div class="buddy-info">
+                <div class="buddy-name">Mpho Buthelezi</div>
+                <div class="buddy-meta">BBA Year 2 · Sports Complex now</div>
+                <div class="buddy-tags">
+                  <span class="tag green">Football</span>
+                  <span class="tag green">Gaming</span>
+                  <span class="tag amber">Event: Friday</span>
+                </div>
+              </div>
+              <div class="compat-bar">
+                <div class="compat-pct" style="color:var(--green);">91%</div>
+                <div class="compat-label">match</div>
+                <div class="compat-track"><div class="compat-fill" style="width:91%;background:var(--green);"></div></div>
+              </div>
+              <div class="buddy-actions">
+                <button class="btn-connect primary green-btn">Connect</button>
+                <button class="btn-connect ghost">Skip</button>
+              </div>
+            </div>
+
+            <div class="buddy-card">
+              <div class="buddy-avatar" style="background:#db2777;">SK</div>
+              <div class="buddy-info">
+                <div class="buddy-name">Sibongile Khumalo</div>
+                <div class="buddy-meta">Diploma IT Year 1 · Student Centre</div>
+                <div class="buddy-tags">
+                  <span class="tag green">Music</span>
+                  <span class="tag green">Drama Club</span>
+                  <span class="tag green">Art</span>
+                </div>
+              </div>
+              <div class="compat-bar">
+                <div class="compat-pct" style="color:var(--green);">85%</div>
+                <div class="compat-label">match</div>
+                <div class="compat-track"><div class="compat-fill" style="width:85%;background:var(--green);"></div></div>
+              </div>
+              <div class="buddy-actions">
+                <button class="btn-connect primary green-btn">Connect</button>
+                <button class="btn-connect ghost">Skip</button>
+              </div>
+            </div>
+
+            <div class="buddy-card">
+              <div class="buddy-avatar" style="background:#ea580c;">BN</div>
+              <div class="buddy-info">
+                <div class="buddy-name">Bongani Nkosi</div>
+                <div class="buddy-meta">BSc CS Year 3 · Cafeteria</div>
+                <div class="buddy-tags">
+                  <span class="tag green">Chess Club</span>
+                  <span class="tag green">Debate</span>
+                  <span class="tag amber">Free: 14:00</span>
+                </div>
+              </div>
+              <div class="compat-bar">
+                <div class="compat-pct" style="color:var(--green);">79%</div>
+                <div class="compat-label">match</div>
+                <div class="compat-track"><div class="compat-fill" style="width:79%;background:var(--green);"></div></div>
+              </div>
+              <div class="buddy-actions">
+                <button class="btn-connect primary green-btn">Connect</button>
+                <button class="btn-connect ghost">Skip</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="widget">
+            <div class="your-profile">
+              <div class="profile-avatar" id="widgetAvatar">--</div>
+              <div>
+                <div class="profile-name" id="widgetName">Loading...</div>
+                <div class="profile-num" id="widgetNum">STU · --------</div>
+              </div>
+            </div>
+            <div class="profile-stat-row">
+              <div class="profile-stat"><div class="profile-stat-val">4</div><div class="profile-stat-lbl">Friends</div></div>
+              <div class="profile-stat"><div class="profile-stat-val">3</div><div class="profile-stat-lbl">Events</div></div>
+              <div class="profile-stat"><div class="profile-stat-val">2</div><div class="profile-stat-lbl">Clubs</div></div>
+            </div>
+            <div class="availability-row">
+              <div class="avail-label">Available to hang out</div>
+              <div class="toggle-switch" onclick="toggleAvail()"><div class="toggle-knob"></div></div>
+            </div>
+          </div>
+
+          <div class="widget">
+            <div class="section-title">Friend Requests <a>View all</a></div>
+            <div class="request-item">
+              <div class="req-avatar" style="background:#16a34a;">TM</div>
+              <div class="req-info">
+                <div class="req-name">Thandeka Mthembu</div>
+                <div class="req-meta">Drama Club · Same hobbies</div>
+              </div>
+              <div class="req-btns">
+                <button class="req-btn accept green">✓</button>
+                <button class="req-btn decline">✕</button>
+              </div>
+            </div>
+            <div class="request-item">
+              <div class="req-avatar" style="background:#ea580c;">LZ</div>
+              <div class="req-info">
+                <div class="req-name">Lungelo Zulu</div>
+                <div class="req-meta">Football · Sports Complex</div>
+              </div>
+              <div class="req-btns">
+                <button class="req-btn accept green">✓</button>
+                <button class="req-btn decline">✕</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="widget">
+            <div class="section-title">Upcoming Events</div>
+            <div class="schedule-row">
+              <span class="schedule-time">Fri 16:00</span>
+              <span class="schedule-dot" style="background:#16a34a;"></span>
+              <span class="schedule-text">Campus Braai Day</span>
+            </div>
+            <div class="schedule-row">
+              <span class="schedule-time">Sat 10:00</span>
+              <span class="schedule-dot" style="background:#db2777;"></span>
+              <span class="schedule-text">Drama Club Auditions</span>
+            </div>
+            <div class="schedule-row">
+              <span class="schedule-time">Mon 12:00</span>
+              <span class="schedule-dot" style="background:#d97706;"></span>
+              <span class="schedule-text">Chess Tournament</span>
+            </div>
+          <div class="schedule-row">
+              <span class="schedule-time">Tue 14:00</span>
+              <span class="schedule-dot" style="background:#3461d1;"></span>
+              <span class="schedule-text">Tech Talk: AI on Campus</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+    <div id="tasksView" style="display:none;">
+      <div class="page-header">
+        <div>
+          <h1>Task &amp; assignment tracker</h1>
+          <p>Stay ahead of deadlines without needing a timetable to remind you.</p>
+        </div>
+      </div>
+
+      <div class="widget">
+        <div class="section-title">Add a task</div>
+        <form id="taskForm" style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap:10px; align-items:end;">
+          <div>
+            <label style="font-size:0.72rem; color:var(--muted); font-weight:600;">Title</label>
+            <input type="text" id="taskTitle" required placeholder="e.g. HCI essay draft" style="width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.85rem;">
+          </div>
+          <div>
+            <label style="font-size:0.72rem; color:var(--muted); font-weight:600;">Course</label>
+            <input type="text" id="taskCourse" placeholder="HCI700" style="width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.85rem;">
+          </div>
+          <div>
+            <label style="font-size:0.72rem; color:var(--muted); font-weight:600;">Due date</label>
+            <input type="date" id="taskDue" style="width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.85rem;">
+          </div>
+          <div>
+            <label style="font-size:0.72rem; color:var(--muted); font-weight:600;">Priority</label>
+            <select id="taskPriority" style="width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:0.85rem;">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-connect primary" style="height:38px;">Add task</button>
+        </form>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="setTaskFilter(this, 'all')">All</button>
+        <button class="filter-btn" onclick="setTaskFilter(this, 'pending')">Pending</button>
+        <button class="filter-btn" onclick="setTaskFilter(this, 'done')">Done</button>
+      </div>
+
+      <div class="section-title">Your tasks</div>
+      <div class="buddy-list" id="taskList">
+        <div class="stat-sub" style="padding:10px 0;">Loading tasks...</div>
+      </div>
+    </div>
+   <div id="homeView" style="display:none;">
+
+      <div class="home-welcome">
+        <div>
+          <h2 id="homeGreeting">Welcome back!</h2>
+          <p id="homeSubtitle">Here's what's happening today on Richfield Connect.</p>
+        </div>
+        <div class="home-welcome-right">
+          <div class="home-date" id="homeDate"></div>
+          <div class="home-time" id="homeClock"></div>
+        </div>
+      </div>
+
+      <div class="stats-row" style="margin-bottom:22px;">
+        <div class="stat-card">
+          <div class="stat-label">Available Matches</div>
+          <div class="stat-value" id="homeStatMatches">—</div>
+          <div class="stat-sub"><span class="stat-dot" style="background:#16a34a;"></span>Students to connect</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">My Buddies</div>
+          <div class="stat-value" id="homeStatBuddies">—</div>
+          <div class="stat-sub"><span class="stat-dot" style="background:#3461d1;"></span>Active connections</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Requests</div>
+          <div class="stat-value" id="homeStatPending">—</div>
+          <div class="stat-sub"><span class="stat-dot" style="background:#d97706;"></span>Awaiting response</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Study Hours</div>
+          <div class="stat-value" id="homeStatHours">—</div>
+          <div class="stat-sub"><span class="stat-dot" style="background:#6b7280;"></span>Completed sessions</div>
+        </div>
+      </div>
+
+      <div class="home-grid">
+
+        <div class="calendar-widget">
+          <div class="cal-header">
+            <div class="cal-title" id="calMonthTitle"></div>
+            <div class="cal-nav">
+              <button onclick="changeMonth(-1)">‹</button>
+              <button onclick="changeMonth(0)">Today</button>
+              <button onclick="changeMonth(1)">›</button>
+            </div>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div class="cal-legend">
+            <span><span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;"></span> Task due</span>
+            <span><span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;border:2px solid var(--green);"></span> Study session</span>
+          </div>
+          <div class="cal-day-detail" id="calDayDetail">
+            <div class="cal-day-detail-title">Click a date to see events</div>
+          </div>
+        </div>
+
+        <div class="upcoming-section">
+          <div class="widget" style="margin-bottom:0;">
+            <div class="section-title" style="margin-bottom:12px;">
+              Upcoming Tasks
+              <a onclick="showView('tasks')">View all →</a>
+            </div>
+            <div id="homeUpcomingTasks"><div class="stat-sub">Loading...</div></div>
+          </div>
+
+          <div class="widget" style="margin-bottom:0;">
+            <div class="section-title" style="margin-bottom:12px;">
+              Upcoming Sessions
+              <a onclick="showView('sessions')">View all →</a>
+            </div>
+            <div id="homeUpcomingSessions"><div class="stat-sub">Loading...</div></div>
+          </div>
+        </div>
+
+      </div>
+  </div>
+
+    
+      <div id="sessionsView" style="display:none;">
+      <div class="page-header">
+        <div>
+          <h1>Study Sessions </h1>
+          <p>Schedule personal sessions or join group sessions with your buddies.</p>
+        </div>
+      </div>
+
+      <div class="widget">
+        <div class="section-title">Schedule a session</div>
+        <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);font-weight:600;">Topic / Title</label>
+            <input type="text" id="sessTitle" placeholder="e.g. HCI Chapter 5 revision"
+              style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.85rem;">
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);font-weight:600;">Course</label>
+            <input type="text" id="sessCourse" placeholder="HCI700"
+              style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.85rem;">
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);font-weight:600;">Date</label>
+            <input type="date" id="sessDate"
+              style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.85rem;">
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);font-weight:600;">Start time</label>
+            <input type="time" id="sessTime"
+              style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.85rem;">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end;">
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);font-weight:600;">Duration (mins)</label>
+            <select id="sessDuration" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.85rem;">
+              <option value="30">30 min</option>
+              <option value="60" selected>1 hour</option>
+              <option value="90">1.5 hours</option>
+              <option value="120">2 hours</option>
+              <option value="180">3 hours</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);font-weight:600;">Location type</label>
+            <select id="sessLocType" onchange="toggleLocField()" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.85rem;">
+              <option value="online">Online</option>
+              <option value="physical">Physical</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--muted);font-weight:600;" id="sessLocLabel">Meeting link</label>
+            <input type="text" id="sessLocation" placeholder="https://meet.google.com/..."
+              style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.85rem;">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding-bottom:2px;">
+            <input type="checkbox" id="sessIsGroup" style="width:16px;height:16px;cursor:pointer;">
+            <label for="sessIsGroup" style="font-size:0.82rem;font-weight:600;cursor:pointer;">Group session</label>
+          </div>
+          <button class="btn-connect primary" onclick="createSession()" style="height:38px;">Schedule</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="setSessionFilter(this,'mine')">My Sessions</button>
+        <button class="filter-btn" onclick="setSessionFilter(this,'group')">Join a Group</button>
+      </div>
+
+      <div class="section-title" id="sessionsLabel">Your scheduled sessions</div>
+      <div class="buddy-list" id="sessionList">
+        <div class="stat-sub" style="padding:10px 0;">Loading sessions...</div>
+      </div>
+    </div>
+
+    <div id="studyRoomView" style="display:none;">
+
+      <div class="room-header">
+        <div class="room-avatar" id="roomBuddyAvatar" style="background:#3461d1;">--</div>
+        <div class="room-info">
+          <div class="room-title" id="roomTitle">Study Room</div>
+          <input type="text" class="room-topic-input" id="roomTopic" placeholder="What are you studying today? (e.g. HCI Chapter 5)" onkeydown="if(event.key==='Enter'){this.blur();saveNotes();}"/>
+        </div>
+        <div class="room-actions">
+          <button class="room-btn ghost" id="roomMsgBtn" onclick="openRoomMessage()"> Message</button>
+          <button class="room-btn back" onclick="showView('buddy')">← Back</button>
+        </div>
+      </div>
+
+      <div class="session-stats-row">
+        <div class="session-stat">
+          <div class="session-stat-val" id="roomSessionTime">0m</div>
+          <div class="session-stat-lbl">Time in room</div>
+        </div>
+        <div class="session-stat">
+          <div class="session-stat-val" id="roomPomoCycles">0</div>
+          <div class="session-stat-lbl">Pomodoros done</div>
+        </div>
+        <div class="session-stat">
+          <div class="session-stat-val" id="roomNoteWords">0</div>
+          <div class="session-stat-lbl">Words in notes</div>
+        </div>
+      </div>
+
+      <div class="room-grid" style="margin-top:20px;">
+
+        <div>
+          <div class="timer-widget">
+            <div class="timer-tabs">
+              <div class="timer-tab active" id="tab-pomodoro" onclick="switchTimer('pomodoro')"> Pomodoro</div>
+              <div class="timer-tab" id="tab-countdown" onclick="switchTimer('countdown')"> Countdown</div>
+              <div class="timer-tab" id="tab-stopwatch" onclick="switchTimer('stopwatch')"> Stopwatch</div>
+            </div>
+
+            <!-- Pomodoro -->
+            <div id="timer-pomodoro">
+              <div class="timer-display">
+                <div class="timer-clock" id="pomoDisplay">25:00</div>
+                <div class="timer-label" id="pomoLabel">Focus time</div>
+              </div>
+              <div class="timer-progress-track">
+                <div class="timer-progress-fill" id="pomoProgress" style="width:100%;"></div>
+              </div>
+              <div class="pomodoro-cycles" id="pomoCycles">
+                <div class="pomo-dot"></div><div class="pomo-dot"></div>
+                <div class="pomo-dot"></div><div class="pomo-dot"></div>
+              </div>
+              <div class="timer-controls">
+                <button class="timer-ctrl secondary" onclick="resetPomodoro()" title="Reset">↺</button>
+                <button class="timer-ctrl play" id="pomoPlayBtn" onclick="togglePomodoro()">▶</button>
+                <button class="timer-ctrl secondary" onclick="skipPomodoro()" title="Skip">⏭</button>
+              </div>
+            </div>
+
+            <!-- Countdown -->
+            <div id="timer-countdown" style="display:none;">
+              <div class="countdown-inputs" id="countdownSetup">
+                <div class="countdown-input-group">
+                  <label>Hours</label>
+                  <input type="number" id="cdHours" min="0" max="23" value="0" placeholder="00"/>
+                </div>
+                <div class="countdown-input-group">
+                  <label>Minutes</label>
+                  <input type="number" id="cdMinutes" min="0" max="59" value="25" placeholder="25"/>
+                </div>
+                <div class="countdown-input-group">
+                  <label>Seconds</label>
+                  <input type="number" id="cdSeconds" min="0" max="59" value="0" placeholder="00"/>
+                </div>
+              </div>
+              <div class="timer-display">
+                <div class="timer-clock" id="cdDisplay">00:25:00</div>
+                <div class="timer-label" id="cdLabel">Set time above and press play</div>
+              </div>
+              <div class="timer-progress-track">
+                <div class="timer-progress-fill" id="cdProgress" style="width:100%;background:var(--amber);"></div>
+              </div>
+              <div class="timer-controls">
+                <button class="timer-ctrl secondary" onclick="resetCountdown()">↺</button>
+                <button class="timer-ctrl play" id="cdPlayBtn" onclick="toggleCountdown()" style="background:var(--amber);">▶</button>
+              </div>
+            </div>
+
+            <!-- Stopwatch -->
+            <div id="timer-stopwatch" style="display:none;">
+              <div class="timer-display">
+                <div class="timer-clock" id="swDisplay">00:00:00</div>
+                <div class="timer-label">Elapsed time</div>
+              </div>
+              <div class="timer-controls">
+                <button class="timer-ctrl secondary" onclick="resetStopwatch()">↺</button>
+                <button class="timer-ctrl play" id="swPlayBtn" onclick="toggleStopwatch()" style="background:var(--green);">▶</button>
+                <button class="timer-ctrl secondary" onclick="lapStopwatch()" title="Lap"></button>
+              </div>
+              <div id="swLaps" style="margin-top:12px;max-height:120px;overflow-y:auto;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="notes-widget">
+          <div class="notes-header">
+            <div class="notes-title"> Shared Notes</div>
+            <div class="notes-save-status" id="notesSaveStatus">Auto-saves every 10s</div>
+          </div>
+          <textarea class="notes-textarea" id="roomNotes" placeholder="Write your notes here... Both you and your study buddy can see these notes when they open the study room."></textarea>
+          <div class="notes-footer">
+            <span class="notes-hint">Both buddies share this notepad</span>
+            <button class="room-btn primary" style="padding:6px 14px;font-size:0.78rem;" onclick="saveNotes()">Save now</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="messagesView" style="display:none;">
+      <div class="page-header">
+        <div>
+          <h1>Messages </h1>
+          <p>Chat with your study buddies and classmates.</p>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 280px 1fr; gap:16px; height:calc(100vh - 200px);">
+
+        <!-- Contact list -->
+        <div class="widget" style="overflow-y:auto; padding:12px; margin-bottom:0;">
+          <div class="section-title" style="margin-bottom:10px;">Contacts</div>
+          <div id="contactList">
+            <div class="stat-sub">Loading contacts...</div>
+          </div>
+        </div>
+
+        <!-- Chat panel -->
+        <div class="widget" style="display:flex; flex-direction:column; padding:0; margin-bottom:0; overflow:hidden;">
+          <div id="chatHeader" style="padding:14px 18px; border-bottom:1px solid var(--border); font-weight:700; font-size:0.9rem; color:var(--muted);">
+            Select a contact to start chatting
+          </div>
+          <div id="chatThread" style="flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px;">
+          </div>
+          <div id="chatInputArea" style="padding:12px 16px; border-top:1px solid var(--border); display:none; gap:10px; align-items:center;">
+            <input type="text" id="msgInput" placeholder="Type a message..." 
+              style="flex:1; padding:9px 14px; border:1px solid var(--border); border-radius:20px; font-family:inherit; font-size:0.85rem; outline:none;"
+              onkeydown="if(event.key==='Enter') sendMessage()"/>
+            <button class="btn-connect primary" onclick="sendMessage()" style="border-radius:20px; padding:9px 18px;">Send</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/Dashboard.js"></script>
+</body>
+</html>

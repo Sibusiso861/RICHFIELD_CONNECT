@@ -1,0 +1,224 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f0f2f5;
+  --card: #ffffff;
+  --blue: #3461d1;
+  --blue-hover: #2a52b8;
+  --text: #1a1f2e;
+  --muted: #6b7280;
+  --border: #e2e5ea;
+  --input-bg: #ffffff;
+  --radius: 8px;
+  --link: #3461d1;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Navbar ── */
+.navbar {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-icon {
+  width: 42px;
+  height: 42px;
+  background: var(--blue);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.nav-icon svg { width: 22px; height: 22px; }
+
+.nav-text { display: flex; flex-direction: column; }
+.nav-text .brand { font-size: 0.95rem; font-weight: 700; color: var(--text); line-height: 1.2; }
+.nav-text .campus { font-size: 0.78rem; color: var(--muted); font-weight: 400; }
+
+/* ── Main Layout Centering ── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+.page-heading {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.page-heading h1 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.page-heading p {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ── Card Container ── */
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 32px 32px 28px;
+  width: 100%;
+  max-width: 520px; /* Slightly wider to comfortably fit two columns side-by-side */
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  animation: rise 0.45s cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── FIX 1: Two Column Layout Grid ── */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ── Fields & Labels ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.input-wrap { position: relative; }
+
+/* ── FIX 2: Added support for both input and select elements ── */
+.input-wrap input,
+.input-wrap select {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--input-bg);
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.input-wrap input::placeholder { color: #b0b7c3; }
+.input-wrap input:focus,
+.input-wrap select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(52,97,209,0.12);
+}
+.input-wrap input.error,
+.input-wrap select.error {
+  border-color: #e53e3e;
+  box-shadow: 0 0 0 3px rgba(229,62,62,0.1);
+}
+
+/* Custom dropdown arrow placement for select tags */
+.select-wrap::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--muted);
+  pointer-events: none;
+}
+
+/* ── FIX 3: Clean Checkbox Alignment ── */
+.terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 8px 0 20px;
+  line-height: 1.4;
+}
+.terms input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--blue);
+  margin-top: 2px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.terms a { color: var(--blue); font-weight: 600; text-decoration: none; }
+.terms a:hover { text-decoration: underline; }
+
+/* ── Action Buttons ── */
+.btn-login,
+.btn-signup {
+  width: 100%;
+  padding: 13px;
+  background: var(--blue);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.97rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 2px 10px rgba(52,97,209,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-login:hover, .btn-signup:hover { background: var(--blue-hover); box-shadow: 0 4px 16px rgba(52,97,209,0.3); }
+.btn-login:active, .btn-signup:active { transform: scale(0.99); }
+
+/* --- Error Messaging & Utilities --- */
+.err-msg {
+  font-size: 0.78rem;
+  color: #e53e3e;
+  display: none;
+  margin-top: 2px;
+}
+.err-msg.show { display: block; }
+
+.footer-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.87rem;
+  color: var(--muted);
+}
+.footer-link a { color: var(--link); font-weight: 600; text-decoration: none; }
+.footer-link a:hover { text-decoration: underline; }
+
+@media (max-width: 520px) {
+  .card { padding: 24px 18px 20px; }
+  .navbar { padding: 10px 16px; }
+  .field-row { grid-template-columns: 1fr; gap: 0; }
+}

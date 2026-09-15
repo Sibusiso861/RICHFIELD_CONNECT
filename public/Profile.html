@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Richfield Connect — My Profile</title>
+  <link rel="stylesheet" href="style.css"> 
+  <style>
+    /* Profile specific layout accents */
+    .profile-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .profile-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .profile-avatar-large {
+      width: 80px;
+      height: 80px;
+      background: #2563eb;
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin: 0 auto 15px auto;
+    }
+    [data-theme="dark"] {
+  --bg: #0f172a;
+  --white: #1e293b;
+  --text: #f1f5f9;
+  --border: #334155;
+  --muted: #94a3b8;
+  --blue-light: #1e3a5f;
+  --green-light: #14532d;
+  --amber-light: #451a03;
+  --navy: #0f172a;
+}
+    .info-group {
+      margin-bottom: 20px;
+     .info-value {
+    font-size: 16px;
+    color: var(--text-main);
+    background-color: #f8fafc;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0; /* Kept the valid hex code */
+    font-weight: 500;
+} 
+    }
+    .info-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .btn-back {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #f1f5f9;
+      color: #334155;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .btn-back:hover {
+      background: #e2e8f0;
+    }
+  </style>
+  <script>
+(function() {
+  const prefs = JSON.parse(localStorage.getItem('rc_prefs') || '{}');
+  if (prefs.theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+})();
+</script>
+</head>
+<body>
+
+  <div class="profile-container">
+    <div class="profile-header">
+      <div id="profileBigAvatar" class="profile-avatar-large">SD</div>
+      <h2 id="profileFullName" style="margin: 5px 0; color: #00245f;">Student Name</h2>
+      <p id="profileRole" style="color: #64748b; margin: 0;">Verified Campus Member</p>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 25px;">
+
+    <div class="info-group">
+      <span class="info-label">Student Number</span>
+      <div id="infoStudentNum" class="info-value">Loading...</div>
+    </div>
+
+    <div class="info-group">
+      <span class="info-label">Email Address</span>
+      <div id="infoEmail" class="info-value">Loading...</div>
+    </div>
+
+    <div class="info-group">
+      <span class="info-label">Enrolled Academic Course</span>
+      <div id="infoCourse" class="info-value">Loading...</div>
+    </div>
+
+    <a href="Dashboard.html" class="btn-back">← Back to Dashboard</a>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    // 1. Pull the initial user session details saved during login
+    const sessionData = localStorage.getItem('currentUser') || localStorage.getItem('user');
+
+    if (!sessionData) {
+      alert("Session expired. Please log in again.");
+      window.location.href = 'http://127.0.0.1:5500/Signin.html';
+      return;
+    }
+
+    // Parse the data so we can read the student number
+    const loggedInUser = JSON.parse(sessionData);
+    const studentNum = loggedInUser.studentNum || loggedInUser.user?.studentNum;
+
+    if (!studentNum) {
+      alert("Invalid session data. Please log in again.");
+      window.location.href = 'http://127.0.0.1:5500/Signin.html';
+      return;
+    }
+
+    try {
+      // 2. Fetch data from your EXACT backend endpoint format: /profile/:studentNum
+      const response = await fetch(`http://localhost:5001/profile/${studentNum}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Could not retrieve profile from database');
+      }
+
+      // This is the complete user record straight from your SQLite database columns
+      const dbUser = await response.json();
+
+      // 3. Generate avatar profile text initials dynamically
+      const firstInitial = dbUser.firstName ? dbUser.firstName.charAt(0).toUpperCase() : '';
+      const lastInitial = dbUser.lastName ? dbUser.lastName.charAt(0).toUpperCase() : '';
+      
+      // 4. Inject all verified database info straight into your UI view cards
+      document.getElementById('profileBigAvatar').textContent = firstInitial + lastInitial;
+      document.getElementById('profileFullName').textContent = `${dbUser.firstName} ${dbUser.lastName}`;
+      
+      document.getElementById('infoStudentNum').textContent = dbUser.studentNum || 'Not Provided';
+      document.getElementById('infoEmail').textContent = dbUser.email || 'Not Provided';
+      document.getElementById('infoCourse').textContent = dbUser.course || 'General Curriculum';
+
+    } catch (error) {
+      console.error("Profile Fetch Error:", error);
+      alert("Error loading profile information. Please try logging in again.");
+      window.location.href = 'http://127.0.0.1:5500/Signin.html';
+    }
+  });
+</script>
+</body>
+</html>
