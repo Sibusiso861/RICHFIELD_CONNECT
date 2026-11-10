@@ -1,0 +1,5 @@
+node_modules/
+richfield_connect.db
+.env
+*.db
+ 

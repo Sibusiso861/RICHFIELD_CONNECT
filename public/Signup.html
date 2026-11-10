@@ -7,29 +7,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="css/Mystyleup.css"/>
 </head>
-<body>
+<body class="mood-page-background">
 
-  <nav class="navbar">
-    <div class="nav-icon">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 3L2 8l10 5 10-5-10-5Z" fill="#fff"/>
-        <path d="M2 8v6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M6 10.5v4.5c0 1.657 2.686 3 6 3s6-1.343 6-3v-4.5" fill="#fff" opacity=".7"/>
-      </svg>
-    </div>
-    <div class="nav-text">
-      <span class="brand">Richfield</span>
-      <span class="campus">Umhlanga Campus</span>
+  <nav class="navbar mood-page-background">
+    <div class="nav-brand-container">
+      <img src="img/richfieldlogo.jpg" alt="Richfield Logo" class="brand-logo-img"/>
+      <div class="nav-text-block">
+        <span class="brand">Richfield.Connect</span>
+        <span class="campus">Umhlanga Campus</span>
+      </div>
     </div>
   </nav>
 
-  <main class="main">
-    <div class="page-heading">
-      <h1>Create an Account</h1>
-      <p>Join the student portal dashboard</p>
+  <main class="main mood-page-main">
+    <div class="mood-card-container">
+      <div class="page-heading centered-heading">
+      <h1 class="white-text large-title">Create an Account</h1>
+      <p class="desatured-white-text">Sign up with your student number, email & password</p>
     </div>
 
-    <div class="card">
+    <div class="card mood-card">
       <form id="signupForm" onsubmit="handleSignup(event)" novalidate>
 
         <div class="field-row">
@@ -77,31 +74,44 @@
                 <option value="cs">Bachelor of Computer Science</option>
                 <option value="it">BSc in Information Technology</option>
                 <option value="ba">Bachelor of Business Administration</option>
+                <option value="dit">Diploma in Information Technology</option>
+                <option value="dba">Diploma in Business Administration</option>
+                <option value="bcom">Bachelor of Commerce</option>
+                <option value="bba">Bachelor of Business Administration</option>
               </select>
             </div>
             <span class="err-msg" id="courseErr">Please select a course.</span>
           </div>
 
           <div class="field">
-            <label for="password">Password</label>
-            <div class="input-wrap">
+            <label for="password" class="field-label-white">Password</label>
+            <div class="input-wrap dark-input-wrap">
               <input type="password" id="password" placeholder="Password"/>
             </div>
             <span class="err-msg" id="passwordErr">Please enter a password.</span>
+           <ul id="password-requirements" class="requirements-list">
+           <li id="req-length" class="invalid">At least 8 characters</li>
+           <li id="req-uppercase" class="invalid">1 uppercase letter</li>
+           <li id="req-lowercase" class="invalid">1 lowercase letter</li>
+           <li id="req-number" class="invalid">1 number</li>
+           <li id="req-special" class="invalid">1 special character</li>
+           <li id="req-nospaces" class="invalid">No spaces</li>
+           </ul>
+           
           </div>
         </div>
 
         <div class="field">
-          <label for="confirmPass">Confirm Password</label>
-          <div class="input-wrap">
-            <input type="password" id="confirmPass" placeholder="Confirm Password"/>
+          <label for="confirmPass" class="field-label-white">Confirm Password</label>
+          <div class="input-wrap dark-input-wrap">
+           <input type="password" id="confirmPass" placeholder="Confirm Password"/>
           </div>
           <span class="err-msg" id="confirmPassErr">Passwords do not match.</span>
         </div>
 
         <div class="terms">
           <input type="checkbox" id="agree"/>
-          <label for="agree">I agree to the <a href="#">Terms and Conditions</a></label>
+          <label for="agree" class="field-label-white">I agree to the <a href="#" class="link-white">Terms and Conditions</a></label>
         </div>
 
         <button type="submit" class="btn-signup" id="signupBtn">
@@ -116,62 +126,132 @@
   </main>
  
 <script>
-  async function handleSignup(e) {
-    e.preventDefault();
-    console.log("1. Form submitted, default prevented.");
+  // Real-time password validation feedback
+const passwordInput = document.getElementById('password');
+const requirements = {
+  length: { regex: /.{8,}/, element: document.getElementById('req-length') },
+  uppercase: { regex: /[A-Z]/, element: document.getElementById('req-uppercase') },
+  lowercase: { regex: /[a-z]/, element: document.getElementById('req-lowercase') },
+  number: { regex: /[0-9]/, element: document.getElementById('req-number') },
+  special: { regex: /[^A-Za-z0-9\s]/, element: document.getElementById('req-special') },
+  noSpaces: { regex: /^\S*$/, element: document.getElementById('req-nospaces') }
+};
 
-    // Gather form values
-    const formData = {
-      firstName: document.getElementById('firstName').value.trim(),
-      lastName: document.getElementById('lastName').value.trim(),
-      studentNum: document.getElementById('studentNum').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      course: document.getElementById('course').value,
-      password: document.getElementById('password').value
-    };
-    console.log("2. Form data gathered:", formData);
-
-    const btn = document.getElementById('signupBtn');
-    const btnText = document.getElementById('btnText');
-    const spinner = document.getElementById('spinner');
-
-    if (btn) btn.disabled = true;
-    if (btnText) btnText.style.display = 'none';
-    if (spinner) spinner.style.display = 'block';
-
-    try {
-      console.log("3. Sending fetch request to backend...");
-      const response = await fetch('http://localhost:5001/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      console.log("4. Response received. Status:", response.status);
-      const data = await response.json();
-      console.log("5. Data parsed from backend:", data);
-
-      if (response.ok) {
-        console.log("6. Success! Saving user to localStorage...");
-        const userSessionData = data.user || formData;
-        localStorage.setItem('currentUser', JSON.stringify(userSessionData));
-
-        console.log("7. Forcing immediate redirect to Dashboard.html...");
-        window.location.assign('Dashboard.html'); 
-        return; // Stop running any more code
-        
+if (passwordInput) {
+  passwordInput.addEventListener('input', () => {
+    const value = passwordInput.value;
+    Object.keys(requirements).forEach(key => {
+      const rule = requirements[key];
+      const isValid = rule.regex.test(value) && (key !== 'noSpaces' || value.length > 0);
+      if (isValid) {
+        rule.element.classList.remove('invalid');
+        rule.element.classList.add('valid');
       } else {
-        // Backend rejected the signup (e.g. duplicate user)
-        console.warn("Backend rejected signup:", data.error);
-        alert("Signup failed: " + (data.error || "User may already exist."));
+        rule.element.classList.remove('valid');
+        rule.element.classList.add('invalid');
       }
+    });
+  });
+}
 
-    } catch (err) {
-      console.error('Fetch failed or network error:', err);
-      alert('Server connection error. Check your terminal to ensure Server.js is running.');
+async function handleSignup(e) {
+  e.preventDefault();
+
+  // Gather form values
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const studentNum = document.getElementById('studentNum').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const course = document.getElementById('course').value;
+  const password = document.getElementById('password').value;
+  const confirmPass = document.getElementById('confirmPass').value;
+  const agree = document.getElementById('agree').checked;
+
+  // 1. Validate empty required fields
+  if (!firstName || !lastName || !studentNum || !email || !course || !password || !confirmPass) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+
+  // 2. Validate Terms and Conditions checkbox
+  if (!agree) {
+    alert('You must agree to the Terms and Conditions to create an account.');
+    return;
+  }
+
+  // 3. Name validation (Letters and spaces only - blocks numbers & special chars)
+  const nameRegex = /^[A-Za-z\s]+$/;
+  if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
+    alert('First name and last name must contain letters only (no numbers or special characters).');
+    return;
+  }
+
+  // 4. Student Number validation (Numbers only - blocks words)
+  const studentNumRegex = /^\d+$/;
+  if (!studentNumRegex.test(studentNum)) {
+    alert('Student number must contain numbers only.');
+    return;
+  }
+
+  // 5. Password Complexity Validation
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S{8,}$/;
+  if (!passwordRegex.test(password)) {
+    alert(
+      'Password does not meet security requirements:\n' +
+      '- Must be at least 8 characters long\n' +
+      '- Must contain at least 1 uppercase letter (A-Z)\n' +
+      '- Must contain at least 1 lowercase letter (a-z)\n' +
+      '- Must contain at least 1 number (0-9)\n' +
+      '- Must contain at least 1 special character (!@#$%...)\n' +
+      '- Must NOT contain spaces'
+    );
+    return;
+  }
+
+  // 6. Validate password confirmation match
+  if (password !== confirmPass) {
+    alert('Password and Confirm Password do not match.');
+    return;
+  }
+
+  // Prepare payload
+  const formData = {
+    firstName,
+    lastName,
+    studentNum,
+    email,
+    course,
+    password
+  };
+
+  const btn = document.getElementById('signupBtn');
+  const btnText = document.getElementById('btnText');
+  const spinner = document.getElementById('spinner');
+
+  if (btn) btn.disabled = true;
+  if (btnText) btnText.style.display = 'none';
+  if (spinner) spinner.style.display = 'block';
+
+  try {
+    // Send request to Express server
+    const response = await fetch('http://localhost:5001/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      alert(data.message || 'Registration successful! Check your student inbox to verify your account.');
+      window.location.href = 'Signin.html';
+    } else {
+      alert('Signup failed: ' + (data.error || 'User may already exist.'));
     }
-
-    // Reset button only if the signup failed
+  } catch (err) {
+    console.error('Fetch failed or network error:', err);
+    alert('Server connection error. Ensure your backend server is running on port 5001.');
+  } finally {
     if (spinner) spinner.style.display = 'none';
     if (btnText) {
       btnText.textContent = 'Sign Up';
@@ -179,6 +259,7 @@
     }
     if (btn) btn.disabled = false;
   }
+}
 </script>
 </body>
 </html>

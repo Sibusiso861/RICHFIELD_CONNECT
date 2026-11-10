@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Richfield Connect — Admin Dashboard</title>
+  <link rel="stylesheet" href="../css/Admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <h2>Richfield Admin</h2>
+      <nav>
+        <a href="AdminDashboard.html" class="active">📊 Dashboard</a>
+        <a href="AdminStudents.html">👥 Manage Students</a>
+        <a href="AdminReports.html">📄 Reports</a>
+        <a href="AdminSecurity.html">🛡️ Security & Backup</a>
+        <a href="#" onclick="adminLogout()" class="logout-link">🚪 Sign Out</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-bar">
+        <h1>Administrator Overview</h1>
+        <span id="adminUserGreeting" class="admin-badge">Admin User</span>
+      </header>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Students</h3>
+          <p id="statTotalStudents" class="stat-num">--</p>
+        </div>
+        <div class="stat-card">
+          <h3>System Status</h3>
+          <p class="stat-num" style="color: #16a34a;">Operational</p>
+        </div>
+        <div class="stat-card">
+          <h3>Database Security</h3>
+          <p class="stat-num" style="color: #2563eb;">3NF Normalised</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>System Quick Actions</h3>
+        <p>Use the navigation sidebar to manage student records, generate executive PDF reports, or perform SQLite database security backups.</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/Admin.js"></script>
+  <script>
+    checkAdminAuth();
+    loadDashboardStats();
+  </script>
+</body>
+</html>

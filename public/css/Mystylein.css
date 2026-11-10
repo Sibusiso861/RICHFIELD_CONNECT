@@ -315,3 +315,77 @@
       justify-content: center;
       gap: 8px;
     }
+    /* ==========================================
+   DARK THEME & LOGO FIXES FOR SIGN IN PAGE
+   ========================================== */
+
+/* 1. Fix the massive logo and align navbar */
+.brand-logo-img {
+    height: 45px !important;
+    width: auto !important;
+    border-radius: 4px;
+    margin-right: 15px;
+}
+.nav-brand-container {
+    display: flex;
+    align-items: center;
+}
+
+/* 2. Dark Page Background */
+body.mood-page-background, body {
+    background-color: #051024 !important; 
+}
+
+/* 3. Dark Navbar */
+nav.navbar, .mood-page-navbar {
+    background-color: #0b1c3c !important;
+    border-bottom: 1px solid #1a3668 !important;
+}
+nav.navbar span.brand, nav.navbar span.campus {
+    color: #ffffff !important;
+}
+
+/* 4. Dark Form Card */
+.card, .mood-page-card {
+    background-color: #0b1c3c !important;
+    border: 1px solid #1a3668 !important;
+    border-radius: 8px;
+}
+
+/* 5. Headings and Labels */
+.white-text { color: #ffffff !important; }
+.desatured-white-text { color: #94a3b8 !important; }
+.field label { color: #e2e8f0 !important; }
+
+/* 6. Dark Inputs */
+.input-wrap input {
+    background-color: #162a52 !important;
+    border: 1px solid #1e3a75 !important;
+    color: #ffffff !important;
+}
+.input-wrap input::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* 7. Footer Text */
+.footer-link { color: #94a3b8 !important; }
+.footer-link a { color: #60a5fa !important; }
+
+/* Stack Navbar Text Vertically */
+.nav-text-block {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+/* Optional: Make the brand text a bit bolder so it stands out above the campus name */
+.nav-text-block .brand {
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    line-height: 1.2 !important;
+}
+
+.nav-text-block .campus {
+    font-size: 0.85rem !important;
+    color: #94a3b8 !important; /* Slightly dims the campus name for contrast */
+}

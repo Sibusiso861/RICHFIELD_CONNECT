@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Richfield Connect — Admin Portal</title>
+  <link rel="stylesheet" href="../css/Admin.css">
+</head>
+<body class="admin-login-body">
+  <div class="login-card">
+    <h2>Admin Portal</h2>
+    <p>Authorized System Administrators Only</p>
+    <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+      <div class="input-group">
+        <label>Admin Email</label>
+        <input type="email" id="adminEmail" required placeholder="admin@richfield.ac.za">
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="adminPassword" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn-primary">Sign In as Admin</button>
+      <p id="loginError" class="error-msg"></p>
+    </form>
+    <a href="Signin.html" class="back-link">← Return to Student Login</a>
+  </div>
+
+  <script src="../js/Admin.js"></script>
+</body>
+</html>

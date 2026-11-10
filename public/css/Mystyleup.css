@@ -222,3 +222,240 @@ body {
   .navbar { padding: 10px 16px; }
   .field-row { grid-template-columns: 1fr; gap: 0; }
 }
+/* --- Modern Password Requirements Checklist --- */
+.requirements-list {
+  list-style: none;
+  padding: 12px;
+  margin: 8px 0 0 0;
+  background-color: #f8fafc; /* Very faint grey box */
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Splits into 2 columns to save space */
+  gap: 8px 12px;
+}
+
+.requirements-list li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.75rem;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.4;
+  transition: all 0.3s ease;
+}
+
+/* Default state (Unmet requirements) */
+.requirements-list li.invalid {
+  color: #64748b; /* Muted grey text */
+}
+.requirements-list li.invalid::before {
+  content: "○"; /* Clean empty circle */
+  position: absolute;
+  left: 0;
+  top: -1px;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+/* Valid state (Met requirements) */
+.requirements-list li.valid {
+  color: #059669; /* Darker green text */
+}
+.requirements-list li.valid::before {
+  content: "✓"; /* Green checkmark */
+  position: absolute;
+  left: 0;
+  top: -1px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #10b981;
+}
+/* Navbar and Logo Layout */
+.mood-page-navbar {
+  background-color: #0b1c3c;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center; /* This centers the logo and text vertically */
+}
+
+.nav-brand-container {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Adds space between the logo and the text */
+}
+
+.brand-logo-img {
+  width: 45px; /* Shrinks the giant logo */
+  height: auto;
+}
+
+.nav-text-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand { 
+  color: #ffffff; 
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.campus { 
+  color: #94a3b8; 
+  font-size: 0.85rem;
+}
+
+/* ==========================================
+   DARK THEME STYLES (Moodle/Microsoft style)
+   ========================================== */
+
+/* 1. Fix the Body and Floating Navbar */
+body.mood-page-background {
+  background-color: #0b1c3c !important;
+  background-image: linear-gradient(135deg, #0b1c3c 0%, #153268 100%) !important;
+  color: #ffffff;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: block !important; /* Overrides old flex centering that broke the navbar */
+  font-family: 'Inter', sans-serif;
+}
+
+/* 2. Stick Navbar to the Top */
+.mood-page-navbar {
+  background-color: rgba(11, 28, 60, 0.95) !important;
+  border-bottom: 1px solid #1a3668 !important;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  position: fixed; /* Forces it to the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+/* Navbar Logo & Text */
+.nav-brand-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-logo-img {
+  width: 45px !important;
+  height: auto;
+}
+.nav-text-block {
+  display: flex;
+  flex-direction: column;
+}
+.brand { color: #ffffff !important; font-weight: bold; font-size: 1.2rem; }
+.campus { color: #94a3b8 !important; font-size: 0.85rem; }
+
+/* 3. Adjust Main Area so it sits below the fixed Navbar */
+.main.mood-page-main {
+  padding-top: 100px !important; /* Pushes form down so navbar doesn't cover it */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 4. Force the Card to be Dark Blue */
+.card.mood-page-card, .card.mood-card {
+  background-color: #0f2142 !important; /* Forces dark blue background */
+  border: 1px solid #1e3a75 !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 600px;
+  width: 100%;
+  margin: 20px auto;
+}
+
+/* Text overrides inside the dark card */
+.page-heading h1 { color: #ffffff !important; }
+.page-heading p { color: #94a3b8 !important; }
+.field-label-white { color: #e2e8f0 !important; display: block; margin-bottom: 6px; }
+
+/* 5. Force Inputs to be White */
+.mood-input {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  border-radius: 6px;
+  padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 6. Fix the Checklist */
+.mood-checklist {
+  background-color: #162a52 !important;
+  border: 1px solid #1e3a75 !important;
+  padding: 12px;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  margin-top: 10px;
+  list-style: none;
+}
+.mood-checklist li { position: relative; padding-left: 20px; font-size: 0.75rem; }
+.mood-checklist li.invalid { color: #94a3b8 !important; }
+.mood-checklist li.invalid::before { content: "○"; position: absolute; left: 0; color: #64748b; }
+.mood-checklist li.valid { color: #34d399 !important; }
+.mood-checklist li.valid::before { content: "✓"; position: absolute; left: 0; font-weight: bold; color: #10b981; }
+
+/* 7. Sign Up Button */
+.btn-signup {
+  background-color: #2563eb !important;
+  color: white !important;
+  border: none;
+  padding: 14px;
+  width: 100%;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+}
+.btn-signup:hover { background-color: #1d4ed8 !important; }
+/* ==========================================
+   FORCE DARK THEME OVERRIDES
+   ========================================== */
+
+/* 1. Force Navbar to be Dark Blue */
+nav.navbar, .navbar {
+    background-color: #0b1c3c !important;
+    border-bottom: 1px solid #1a3668 !important;
+}
+
+/* Force Navbar text to show up */
+nav.navbar span.brand, .nav-brand-container .brand {
+    color: #ffffff !important;
+    display: inline-block !important;
+}
+
+/* 2. Force Form Labels to be White/Light Grey */
+form#signupForm .field label {
+    color: #e2e8f0 !important;
+    display: block !important;
+    margin-bottom: 6px !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+}
+
+/* 3. Force Password Checklist Box to be Dark */
+ul#password-requirements {
+    background-color: #162a52 !important;
+    border: 1px solid #1e3a75 !important;
+    color: #cbd5e1 !important;
+}
+
+/* 4. Fix the bottom 'Log in' text area */
+.footer-link, .footer-link a {
+    color: #94a3b8 !important;
+}
+.footer-link a {
+    color: #60a5fa !important;
+}

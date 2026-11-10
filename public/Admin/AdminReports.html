@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Richfield Connect — Admin Reports</title>
+  <link rel="stylesheet" href="../css/Admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <h2>Richfield Admin</h2>
+      <nav>
+        <a href="AdminDashboard.html">📊 Dashboard</a>
+        <a href="AdminStudents.html">👥 Manage Students</a>
+        <a href="AdminReports.html" class="active">📄 Reports</a>
+        <a href="AdminSecurity.html">🛡️ Security & Backup</a>
+        <a href="#" onclick="adminLogout()" class="logout-link">🚪 Sign Out</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-bar">
+        <h1>Administrative Reports & Analytics</h1>
+      </header>
+
+      <div class="card">
+        <h3>Multi-Domain PDF Audit Reports</h3>
+        <p>Generate point-in-time executive reports for examiners and institutional evaluation.</p>
+        
+        <div class="report-buttons">
+          <button onclick="generateReport('system')" class="btn-primary">📄 System Activity & Health</button>
+          <button onclick="generateReport('engagement')" class="btn-primary" style="background: #7c3aed;">👥 User Engagement</button>
+          <button onclick="generateReport('sessions')" class="btn-primary" style="background: #16a34a;">📚 Study Sessions</button>
+          <button onclick="generateReport('security')" class="btn-primary" style="background: #dc2626;">🛡️ Security Audit</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/Admin.js"></script>
+  <script>checkAdminAuth();</script>
+</body>
+</html>

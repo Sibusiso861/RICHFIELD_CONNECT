@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Richfield Connect — Manage Students</title>
+  <link rel="stylesheet" href="../css/Admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <h2>Richfield Admin</h2>
+      <nav>
+        <a href="AdminDashboard.html">📊 Dashboard</a>
+        <a href="AdminStudents.html" class="active">👥 Manage Students</a>
+        <a href="AdminReports.html">📄 Reports</a>
+        <a href="AdminSecurity.html">🛡️ Security & Backup</a>
+        <a href="#" onclick="adminLogout()" class="logout-link">🚪 Sign Out</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-bar">
+        <h1>Student Accounts Management</h1>
+      </header>
+
+      <div class="card">
+        <h3>Registered Database Users</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Student Number</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Course</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody id="studentTableBody">
+            <tr><td colspan="5">Loading student records...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/Admin.js"></script>
+  <script>
+    checkAdminAuth();
+    loadStudentRecords();
+  </script>
+</body>
+</html>

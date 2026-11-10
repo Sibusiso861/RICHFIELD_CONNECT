@@ -462,13 +462,13 @@ body {
   margin-bottom: 22px;
   display: flex; align-items: center; justify-content: space-between;
 }
-.home-welcome h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
-.home-welcome p { font-size: 0.85rem; color: #94a3b8; }
+.home-welcome h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; color: #fff;}
+.home-welcome p { font-size: 0.85rem; color: #fbfdff; }
 .home-welcome-right { text-align: right; }
-.home-date { font-size: 0.82rem; color: #94a3b8; }
+.home-date { font-size: 0.82rem; color: #ffffff; }
 .home-time { font-size: 2rem; font-weight: 800; color: #fff; line-height: 1; }
 .home-grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
-
+.home-welcome h1, .home-welcome h2, .home-welcome h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; color: #fff !important; }
 /* ─── CALENDAR ─── */
 .calendar-widget { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); }
 .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
@@ -710,4 +710,421 @@ body {
   .content { padding: 16px; }
   .mode-selector { grid-template-columns: 1fr; }
   .stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── MOBILE RESPONSIVE STYLES (Screens 768px and smaller) ── */
+@media (max-width: 768px) {
+
+    /* 1. Stack the layout vertically instead of side-by-side */
+    body, .container, .dashboard-layout {
+        flex-direction: column !important;
+        overflow-x: hidden;
+    }
+
+    /* 2. Fix the Sidebar so it doesn't take over the screen */
+    .sidebar {
+        width: 100% !important;
+        min-width: 100% !important;
+        height: auto !important;
+        position: relative !important;
+        border-right: none !important;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px !important;
+    }
+
+    /* Hide less critical sidebar items on small screens if needed */
+    .sidebar .menu-item {
+        padding: 8px 12px;
+    }
+
+    /* 3. Fix the "Add Task" Form Inputs */
+    /* Forces title, course, due date, and button to stack neatly */
+    .task-form, 
+    form, 
+    .add-task-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+
+    .task-form input,
+    .task-form select,
+    .task-form button,
+    form input,
+    form select,
+    form button {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    /* 4. Ensure main content area fills the mobile width */
+    .main-content, .content {
+        width: 100% !important;
+        padding: 15px !important;
+    }
+}
+/* I-Professional Modern Styling */
+:root {
+  --primary: #2563eb;
+  --success: #16a34a;
+  --bg-main: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+  --border-color: #e2e8f0;
+}
+
+body {
+  background-color: var(--bg-main);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text-main);
+}
+
+.widget, .buddy-card, .session-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease-in-out;
+}
+
+.widget:hover, .buddy-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+/* --- UNIFIED THEME VARIABLES --- */
+:root {
+  --bg-main: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+  --muted: #64748b;
+  --border-color: #e2e8f0;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #d97706;
+}
+
+[data-theme="dark"] {
+  --bg-main: #0f172a;
+  --card-bg: #1e293b;
+  --text-main: #f8fafc;
+  --muted: #94a3b8;
+  --border-color: #334155;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.widget, .stat-card, .buddy-card, .calendar-widget {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  border-radius: 12px;
+}
+
+/* --- MOBILE BOTTOM NAVIGATION (Widths < 900px) --- */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: var(--card-bg);
+  border-top: 1px solid var(--border-color);
+  z-index: 1000;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.mobile-nav-item.active {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.mobile-nav-item svg {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 2px;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    display: none !important;
+  }
+  .mobile-nav {
+    display: flex !important;
+  }
+  .layout {
+    padding-bottom: 70px; /* Space for bottom bar */
+  }
+  .content {
+    margin-left: 0 !important;
+    padding: 16px !important;
+  }
+}
+/* ==========================================================================
+   OPTION 3: WHITE & BLUE COLLABORATIVE LIGHT MODE
+   ========================================================================== */
+
+:root {
+  --bg-main: #f4f7fe;
+  --card-bg: #ffffff;
+  --border-color: #e2e8f0;
+  --primary-blue: #2563eb;
+  --primary-hover: #1d4ed8;
+  --accent-light: #eff6ff;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+  --badge-bg: #dbeafe;
+  --badge-text: #1e40af;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(37, 99, 235, 0.08);
+}
+
+body {
+  background-color: var(--bg-main) !important;
+  color: var(--text-dark) !important;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  background: #ffffff !important;
+  border-right: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar .nav-item {
+  color: var(--text-muted) !important;
+  font-weight: 500;
+  border-radius: 10px;
+  margin: 4px 12px;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+}
+
+.sidebar .nav-item:hover {
+  background: var(--accent-light) !important;
+  color: var(--primary-blue) !important;
+}
+
+.sidebar .nav-item.active {
+  background: var(--primary-blue) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+/* Header & Top Bar */
+.top-header, .page-header {
+  background: transparent !important;
+  border-bottom: none !important;
+}
+
+h1, h2, h3, .section-title {
+  color: var(--text-dark) !important;
+  font-weight: 700;
+}
+
+/* Card Containers & Widgets */
+.widget, .stat-card, .calendar-widget, .mode-card {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.widget:hover, .stat-card:hover {
+  box-shadow: var(--shadow-md) !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Mode Selection Cards (Study vs Social Buddy) */
+.mode-card {
+  padding: 20px;
+  cursor: pointer;
+}
+
+.mode-card.active {
+  border: 2px solid var(--primary-blue) !important;
+  background: var(--accent-light) !important;
+}
+
+.mode-title {
+  color: var(--primary-blue);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.mode-desc {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* Detailed Student Buddy Cards (Option 3 Layout) */
+.buddy-card-v3 {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  grid-template-columns: 80px 1fr 140px;
+  gap: 20px;
+  align-items: center;
+}
+
+.buddy-avatar-v3 {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  color: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: 2px solid var(--primary-blue);
+}
+
+.buddy-info-v3 h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  color: var(--text-dark);
+}
+
+.buddy-info-v3 .course-tag {
+  display: inline-block;
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+
+.buddy-info-v3 .bio {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.skill-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.skill-pill {
+  background: #f1f5f9;
+  color: var(--text-dark);
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Match Percentage Ring / Indicator */
+.match-score-v3 {
+  text-align: center;
+}
+
+.match-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px solid var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--primary-blue);
+  margin: 0 auto 10px auto;
+  background: var(--accent-light);
+}
+
+/* Action Buttons */
+.btn-connect-v3 {
+  width: 100%;
+  padding: 10px 16px;
+  background: var(--primary-blue);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-connect-v3:hover {
+  background: var(--primary-hover);
+}
+
+.btn-secondary-v3 {
+  width: 100%;
+  padding: 8px 16px;
+  background: #ffffff;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+.btn-secondary-v3:hover {
+  background: #f8fafc;
+  color: var(--text-dark);
+}
+
+/* Scrollable container specifically for Study Buddy suggestions */
+.study-suggestions-scroll-container {
+  max-height: 520px; /* Adjust this height as needed to fit your screen */
+  overflow-y: auto;
+  padding-right: 8px;
+  margin-top: 10px;
+}
+
+/* Custom scrollbar styling for a cleaner look */
+.study-suggestions-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+.study-suggestions-scroll-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.study-suggestions-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

@@ -2,141 +2,191 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Richfield  Umhlanga Campus</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/Mystylein.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Richfield — Sign In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/Mystylein.css" />
   <script>
-(function() {
-  const prefs = JSON.parse(localStorage.getItem('rc_prefs') || '{}');
-  if (prefs.theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
-})();
-</script>
+    // A malformed preference value must never prevent the login page from loading.
+    (function () {
+      try {
+        const prefs = JSON.parse(localStorage.getItem('rc_prefs') || '{}');
+        if (prefs.theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (error) {
+        console.warn('Theme preferences could not be read:', error);
+      }
+    })();
+  </script>
 </head>
-<body>
-
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="nav-icon">
-      <!-- graduation cap icon -->
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 3L2 8l10 5 10-5-10-5Z" fill="#fff"/>
-        <path d="M2 8v6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M6 10.5v4.5c0 1.657 2.686 3 6 3s6-1.343 6-3v-4.5" fill="#fff" opacity=".7"/>
-      </svg>
-    </div>
-    <div class="nav-text">
-      <span class="brand">Richfield</span>
-      <span class="campus">Umhlanga Campus</span>
+<body class="mood-page-background">
+  <nav class="navbar mood-page-navbar">
+    <div class="nav-brand-container">
+      <img src="img/richfieldlogo.jpg" alt="Richfield Logo" class="brand-logo-img" />
+      <div class="nav-text-block">
+        <span class="brand">Richfield.Connect</span>
+        <span class="campus">Umhlanga Campus</span>
+      </div>
     </div>
   </nav>
 
-  <!-- Main content -->
-  <main class="main">
-    <div class="page-heading">
-      <h1>Welcome back!</h1>
-      <p>Log in with your student number & password</p>
+  <main class="main mood-page-main">
+    <div class="card-heading centered-heading">
+      <h1 class="white-text large-title">Welcome back!</h1>
+      <p class="desatured-white-text">Log in with your student number or email and password</p>
     </div>
 
-    <div class="card">
-      <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
-
-        <!-- Student Number -->
+    <div class="card mood-page-card">
+      <form id="loginForm" novalidate>
         <div class="field">
-          <label for="studentNum">Student Number</label>
+          <label for="studentNum">Student Number or Email</label>
           <div class="input-wrap">
             <input
               type="text"
               id="studentNum"
-              placeholder=""
+              name="identifier"
+              placeholder="e.g. 2024001 or name@example.com"
               autocomplete="username"
-              inputmode="numeric"
+              required
             />
           </div>
-          <span class="err-msg" id="numErr">Please enter your student number.</span>
+          <span class="err-msg" id="numErr">Please enter your student number or email.</span>
         </div>
 
-        <!-- Password -->
         <div class="field">
           <label for="password">Password</label>
           <div class="input-wrap">
             <input
               type="password"
               id="password"
+              class="password-input"
+              name="password"
               placeholder="Your password"
               autocomplete="current-password"
+              required
             />
-            <button type="button" class="toggle-pass" onclick="togglePass()" aria-label="Show/hide password">
-              <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
+            <button type="button" class="toggle-pass" id="togglePassBtn" aria-label="Show password" aria-pressed="false">
+              <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
               </svg>
             </button>
           </div>
           <span class="err-msg" id="passErr">Please enter your password.</span>
         </div>
 
-        <!-- Submit -->
+        <p id="loginStatus" role="status" aria-live="polite" style="min-height:18px;font-size:13px;font-weight:600;"></p>
+
         <button type="submit" class="btn-login" id="loginBtn">
           <span id="btnText">Log In</span>
           <div class="spinner" id="spinner"></div>
         </button>
-
       </form>
     </div>
 
-    <!-- Footer -->
-    <p class="footer-link">Don't have an account? don't worry just <a href="signup.html">Sign up</a></p>
+    <p class="footer-link">Don't have an account? <a href="Signup.html">Sign up</a></p>
   </main>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('loginForm'); // Ensure your <form> has this ID
 
-    if (loginForm) {
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+  <script>
+    'use strict';
 
-        // 1. Capture user inputs perfectly
-        const studentNum = document.getElementById('studentNum').value.trim();
-        const password = document.getElementById('password').value;
+    // The project currently runs the Express API on port 5001.
+    // If you later deploy the project, change this to your deployed API origin.
+    const API_BASE = 'http://127.0.0.1:5001';
 
-        // Visual loading hooks matching your UI state
-        const loginBtn = document.getElementById('loginBtn');
-        if (loginBtn) loginBtn.disabled = true;
-
-        try {
-          // 2. Dispatch payload to your active port 5001 Express server
-          const response = await fetch('http://localhost:5001/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ studentNum, password }) // Keys must match backend exactly
-          });
-
-          const data = await response.json();
-
-          if (response.ok) {
-            // Your server's /login route returns { message, user: {...} } — there is
-            // no token issued anywhere in server.js, so we save the actual user
-            // record it sends back. Every other page (dashboard.html, Profile.html)
-            // reads this exact same 'currentUser' key.
-            localStorage.setItem('currentUser', JSON.stringify(data.user));
-
-            // Success! Route straight into the application dashboard
-            window.location.href = 'Dashboard.html';
-          } else {
-            // Display explicit error returned from server
-            alert(data.error || 'Invalid Student Number or Password.');
-          }
-        } catch (err) {
-          console.error('Network execution failure:', err);
-          alert('Server connection error. Ensure your Node terminal is active.');
-        } finally {
-          if (loginBtn) loginBtn.disabled = false;
-        }
-      });
+    function togglePass() {
+      const passInput = document.getElementById('password');
+      const btn = document.getElementById('togglePassBtn');
+      if (!passInput || !btn) return;
+      const showing = passInput.type === 'password';
+      passInput.type = showing ? 'text' : 'password';
+      btn.setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
+      btn.setAttribute('aria-pressed', String(showing));
     }
-  });
-</script>
-  
+
+    function setLoginStatus(message, isError = true) {
+      const status = document.getElementById('loginStatus');
+      if (!status) return;
+      status.textContent = message;
+      status.style.color = isError ? '#dc2626' : '#15803d';
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+
+      const identifier = document.getElementById('studentNum').value.trim();
+      const password = document.getElementById('password').value;
+      const loginBtn = document.getElementById('loginBtn');
+      const btnText = document.getElementById('btnText');
+      const spinner = document.getElementById('spinner');
+
+      if (!identifier || !password) {
+        setLoginStatus('Please enter your student number/email and password.');
+        return;
+      }
+      if (/\s/.test(identifier)) {
+        setLoginStatus('Your student number or email cannot contain spaces.');
+        return;
+      }
+      if (/\s/.test(password)) {
+        setLoginStatus('Password cannot contain spaces.');
+        return;
+      }
+
+      if (loginBtn) loginBtn.disabled = true;
+      if (btnText) btnText.style.display = 'none';
+      if (spinner) spinner.style.display = 'block';
+      setLoginStatus('Signing in…', false);
+
+      try {
+        const response = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ identifier, password })
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data.error || `Login failed (${response.status}).`);
+        }
+        if (!data.user || typeof data.user !== 'object') {
+          throw new Error('The server did not return a valid user profile.');
+        }
+
+        // Only the role saved in the database determines the redirect.
+        // Missing/unknown roles are treated as student, never as admin.
+        const user = { ...data.user };
+        delete user.password;
+        delete user.verificationToken;
+        user.role = String(user.role || 'student').toLowerCase();
+
+        // Keep the key already used by Dashboard.js and Profile.html.
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        localStorage.setItem('userId', String(user.id || ''));
+
+        if (user.role === 'admin') {
+          window.location.assign('admin/AdminDashboard.html');
+        } else {
+          window.location.assign('Dashboard.html');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        setLoginStatus(error.message || 'Unable to sign in. Please try again.');
+      } finally {
+        if (spinner) spinner.style.display = 'none';
+        if (btnText) {
+          btnText.textContent = 'Log In';
+          btnText.style.display = 'inline';
+        }
+        if (loginBtn) loginBtn.disabled = false;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('togglePassBtn')?.addEventListener('click', togglePass);
+      document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
+    });
+  </script>
 </body>
 </html>

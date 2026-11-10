@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Richfield Connect — Security & Backup</title>
+  <link rel="stylesheet" href="../css/Admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <h2>Richfield Admin</h2>
+      <nav>
+        <a href="AdminDashboard.html">📊 Dashboard</a>
+        <a href="AdminStudents.html">👥 Manage Students</a>
+        <a href="AdminReports.html">📄 Reports</a>
+        <a href="AdminSecurity.html" class="active">🛡️ Security & Backup</a>
+        <a href="#" onclick="adminLogout()" class="logout-link">🚪 Sign Out</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-bar">
+        <h1>System Security & Database Maintenance</h1>
+      </header>
+
+      <div class="card">
+        <h3>💾 SQLite Database Snapshot Backup</h3>
+        <p>Create an immediate, authorized point-in-time backup of the production database.</p>
+        <button onclick="runAdminBackup()" class="btn-primary" style="background: #16a34a;">Create Database Backup</button>
+        <p id="backupResult" style="font-weight: 600; margin-top: 15px;"></p>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/Admin.js"></script>
+  <script>checkAdminAuth();</script>
+</body>
+</html>
